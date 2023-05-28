@@ -14,4 +14,8 @@ routes.post("/verify-email", userControllers.verifyEmail)
 
 routes.post("/resend-otp", userControllers.resendOTP)
 
+routes.post("/forgot-password", userControllers.forgotPassword)
+
+routes.post("/reset-password", body("password").not().isEmpty().withMessage("Password is required.").isLength({ max: 20, min: 8 }).withMessage("Password should be 8 to 20 characters long."), userControllers.resetPassword)
+
 module.exports = routes;
