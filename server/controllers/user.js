@@ -2,6 +2,7 @@ const User = require("../models/User")
 const EmailVerificationToken = require("../models/EmailVerificationToken")
 const PasswordResetToken = require("../models/PasswordResetToken")
 const crypto = require("crypto")
+const jwt = require("jsonwebtoken")
 const { validationResult } = require("express-validator")
 const sgMail = require("@sendgrid/mail")
 
@@ -200,6 +201,20 @@ exports.resetPassword = async (req, res) => {
         await sgMail.send(msg)
 
         return res.status(201).json("You successfully changed your password.")
+    } catch (error) {
+        return res.status(500).json("Something went wrong, please try again.")
+    }
+}
+
+exports.loginUser = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const user = await User.findOne({ email })
+        if (!user) return res.status(401).json("Invalid email or password.")
+        const isPassword = await user.comparePassword(password)
+        if (!isPassword) return res.status(401).json("Invalid email or password.")
+        const accessToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY)
+        return res.json({ name: user.name, email, id: user._id, accessToken })
     } catch (error) {
         return res.status(500).json("Something went wrong, please try again.")
     }
