@@ -1,0 +1,1 @@
+export const formModalClasses = "dark:bg-secondary rounded bg-white p-6 space-y-3 drop-shadow-xl"

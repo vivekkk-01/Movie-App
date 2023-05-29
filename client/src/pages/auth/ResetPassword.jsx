@@ -3,12 +3,14 @@ import Container from "../../components/Container";
 import Title from "../../components/Form/Title";
 import FormInput from "../../components/Form/FormInput";
 import Submit from "../../components/Form/Submit";
+import { formModalClasses } from "../../utils/theme";
+import FormContainer from "../../components/Form/FormContainer";
 
 const Login = () => {
   return (
-    <div className="bg-primary fixed inset-0 -z-10 flex justify-center items-center">
+    <FormContainer>
       <Container>
-        <form className="bg-secondary rounded w-72 p-6 space-y-3">
+        <form className={`${formModalClasses} w-72`}>
           <Title>Reset Password</Title>
           <FormInput
             placeholder={"New Password"}
@@ -25,7 +27,7 @@ const Login = () => {
           <Submit value={"Reset Password"} />
         </form>
       </Container>
-    </div>
+    </FormContainer>
   );
 };
 

@@ -4,12 +4,13 @@ import Title from "../../components/Form/Title";
 import FormInput from "../../components/Form/FormInput";
 import Submit from "../../components/Form/Submit";
 import CustomLink from "../../components/CustomLink";
+import { formModalClasses } from "../../utils/theme";
 
 const Login = () => {
   return (
-    <div className="bg-primary fixed inset-0 -z-10 flex justify-center items-center">
+    <div className="dark:bg-primary fixed inset-0 bg-white -z-10 flex justify-center items-center">
       <Container>
-        <form className="bg-secondary rounded w-72 p-6 space-y-3">
+        <form className={`${formModalClasses} w-72`}>
           <Title>Log In</Title>
           <FormInput
             placeholder={"Your Email"}

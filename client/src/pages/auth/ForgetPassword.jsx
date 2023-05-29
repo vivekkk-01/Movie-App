@@ -4,12 +4,14 @@ import Title from "../../components/Form/Title";
 import FormInput from "../../components/Form/FormInput";
 import Submit from "../../components/Form/Submit";
 import CustomLink from "../../components/CustomLink";
+import FormContainer from "../../components/Form/FormContainer";
+import { formModalClasses } from "../../utils/theme";
 
 const ForgetPassword = () => {
   return (
-    <div className="bg-primary fixed inset-0 -z-10 flex justify-center items-center">
+    <FormContainer>
       <Container>
-        <form className="bg-secondary rounded w-72 p-6 space-y-3">
+        <form className={`${formModalClasses} w-72`}>
           <Title>Forget Password</Title>
           <FormInput
             placeholder={"Your Email"}
@@ -24,7 +26,7 @@ const ForgetPassword = () => {
           </div>
         </form>
       </Container>
-    </div>
+    </FormContainer>
   );
 };
 
