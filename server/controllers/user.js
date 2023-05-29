@@ -20,7 +20,7 @@ exports.registerUser = async (req, res) => {
         const user = await User.create({ ...req.body })
 
         let OTP = ""
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i <= 5; i++) {
             const randomVal = Math.round(Math.random() * 9)
             OTP += randomVal;
         }
@@ -41,7 +41,7 @@ exports.registerUser = async (req, res) => {
 
         await sgMail.send(msg)
 
-        return res.status(201).json("OTP successfully sent to your email address.")
+        return res.status(201).json({ id: user._id, name: user.name, email: user.email })
     } catch (error) {
         return res.status(500).json("Something went wrong, please try again.")
     }
@@ -62,7 +62,6 @@ exports.verifyEmail = async (req, res) => {
         if (!token) {
             return res.status(400).json("User not found.")
         }
-
         const isMatched = await token.compareOTP(OTP)
         if (!isMatched) return res.status(400).json("Enter a valid OTP, please.")
 
@@ -103,7 +102,7 @@ exports.resendOTP = async (req, res) => {
         }
 
         let OTP = ""
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i <= 5; i++) {
             const randomVal = Math.round(Math.random() * 9)
             OTP += randomVal;
         }

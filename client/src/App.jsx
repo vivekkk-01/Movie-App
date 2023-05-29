@@ -8,6 +8,7 @@ import AuthRoot from "./pages/auth/AuthRoot";
 import ForgetPassword from "./pages/auth/ForgetPassword";
 import EmailVerification from "./pages/auth/EmailVerification";
 import ResetPassword from "./pages/auth/ResetPassword";
+import NotFound from "./pages/NotFound";
 
 const router = createBrowserRouter([
   { path: "/", element: <Root />, children: [] },
@@ -22,6 +23,7 @@ const router = createBrowserRouter([
       { path: "reset-password", element: <ResetPassword /> },
     ],
   },
+  { path: "*", element: <NotFound /> },
 ]);
 
 function App() {

@@ -15,6 +15,10 @@ const userRoutes = require("./routes/user")
 
 app.use("/api/users", userRoutes)
 
+app.use("/*", (req, res) => {
+    return res.status(404).json("Not Found!")
+})
+
 app.listen(PORT, () => {
     console.log(`Server is running on Port ${PORT}`)
 })
