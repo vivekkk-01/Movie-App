@@ -7,16 +7,19 @@ import AuthRoot from "./pages/auth/AuthRoot";
 import ForgetPassword, {
   loader as forgetPasswordLoader,
 } from "./pages/auth/ForgetPassword";
-import EmailVerification, {
-  loader as emailVerificationLoader,
-} from "./pages/auth/EmailVerification";
+import EmailVerification from "./pages/auth/EmailVerification";
 import ResetPassword, {
   loader as resetPasswordLoader,
 } from "./pages/auth/ResetPassword";
 import NotFound from "./pages/NotFound";
+import Home from "./pages/Home";
 
 const router = createBrowserRouter([
-  { path: "/", element: <Root />, children: [] },
+  {
+    path: "/",
+    element: <Root />,
+    children: [{ index: true, element: <Home /> }],
+  },
   {
     path: "/auth",
     element: <AuthRoot />,
@@ -31,7 +34,6 @@ const router = createBrowserRouter([
       {
         path: "verification",
         element: <EmailVerification />,
-        loader: emailVerificationLoader,
       },
       {
         path: "reset-password",

@@ -7,6 +7,7 @@ import { formModalClasses } from "../../utils/theme";
 import { redirect, useLocation, useNavigate } from "react-router-dom";
 import { verifyEmail } from "../../api/auth";
 import { useAuth, useNotification } from "../../hooks";
+import { resendOTP } from "../../api/auth";
 
 const isValidOtp = (otp) => {
   let valid = false;
@@ -26,6 +27,7 @@ const EmailVerification = () => {
   const { isAuth, authInfo } = useAuth();
   const { state } = useLocation();
   const user = state?.user;
+  const isVerified = authInfo?.profile?.isVerified;
 
   useEffect(() => {
     if (!user) {
@@ -34,10 +36,10 @@ const EmailVerification = () => {
   }, [user]);
 
   useEffect(() => {
-    if (authInfo.isLoggedIn) {
+    if (authInfo.isLoggedIn && isVerified) {
       return navigate("/");
     }
-  }, [authInfo.isLoggedIn]);
+  }, [authInfo.isLoggedIn, isVerified]);
 
   const inputRef = useRef();
 
@@ -72,7 +74,7 @@ const EmailVerification = () => {
     else {
       const { type, response } = await verifyEmail({
         OTP: otp.join(""),
-        userId: user.id,
+        userId: user.id || user.profile?.id,
       });
       if (type === "error") {
         updateNotification("error", response);
@@ -81,6 +83,11 @@ const EmailVerification = () => {
         isAuth(response.accessToken);
       }
     }
+  };
+
+  const handleResendOTP = async () => {
+    const { type, response } = await resendOTP(user.id || user.profile?.id);
+    updateNotification(type, response);
   };
 
   return (
@@ -106,7 +113,16 @@ const EmailVerification = () => {
               />
             ))}
           </div>
-          <Submit value="Send Link" />
+          <div>
+            <Submit value="Verify Account" />
+            <button
+              onClick={handleResendOTP}
+              type="button"
+              className="hover:underline dark:text-white text-blue-500 font-semibold mt-2"
+            >
+              I don't have an OTP
+            </button>
+          </div>
         </form>
       </Container>
     </FormContainer>
@@ -114,11 +130,3 @@ const EmailVerification = () => {
 };
 
 export default EmailVerification;
-
-export const loader = () => {
-  const token = localStorage.getItem("auth-token");
-  if (token) {
-    return redirect("/");
-  }
-  return null;
-};

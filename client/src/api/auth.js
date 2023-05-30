@@ -63,3 +63,13 @@ export const resetPassword = async (userData) => {
         return { type: "error", response: err };
     }
 }
+
+export const resendOTP = async (userId) => {
+    try {
+        const { data } = await client.post("/users/resend-otp", { userId })
+        return { type: "success", response: data };
+    } catch (error) {
+        const err = error?.response?.data ? error?.response?.data : error?.message ? error?.message : error?.data ? error?.data : "Something went wrong, please try again"
+        return { type: "error", response: err };
+    }
+}

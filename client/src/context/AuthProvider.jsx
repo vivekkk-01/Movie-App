@@ -34,7 +34,8 @@ const AuthProvider = ({ children }) => {
 
   const isAuth = async (token) => {
     setAuthInfo({ ...authInfo, isPending: true });
-    const { type, response } = await getIsAuth(token);
+    let accessToken = token || localStorage.getItem("auth-token");
+    const { type, response } = await getIsAuth(accessToken);
     if (type === "error") {
       return setAuthInfo({ ...authInfo, isPending: false, error: response });
     } else {
