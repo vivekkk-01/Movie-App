@@ -153,7 +153,7 @@ exports.forgotPassword = async (req, res) => {
         })
         const newToken = await passToken;
         await PasswordResetToken.create({ user: user._id, token: newToken })
-        const passwordResetUrl = `http://localhost:3000/reset-password?token=${newToken}&id=${user._id}`
+        const passwordResetUrl = `http://127.0.0.1:5173/auth/reset-password?token=${newToken}&id=${user._id}`
 
         sgMail.setApiKey(process.env.SEND_GRID_API_KEY)
 
@@ -179,7 +179,7 @@ exports.resetPassword = async (req, res) => {
         const user = await User.findById(userId)
         if (!user) return res.status(404).json("User not found!")
         const resetToken = await PasswordResetToken.findOne({ user: userId })
-        if (!resetToken) return res.status(404).json("Invalid request.")
+        if (!resetToken) return res.status(404).json("Token expired, try resetting your password again.")
         const isMatched = await resetToken.compareToken(token)
         if (!isMatched) return res.status(404).json("Invalid request.")
 

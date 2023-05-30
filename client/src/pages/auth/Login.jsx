@@ -40,12 +40,6 @@ const Login = () => {
     });
   };
 
-  useEffect(() => {
-    if (authInfo?.error && !authInfo?.isPending) {
-      updateNotification("error", authInfo?.error);
-    }
-  }, [authInfo.error, authInfo.isPending]);
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     const { ok, error } = validateUser(userInfo);

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Container from "../../components/Container";
 import Title from "../../components/Form/Title";
 import FormInput from "../../components/Form/FormInput";
@@ -7,11 +7,14 @@ import CustomLink from "../../components/CustomLink";
 import FormContainer from "../../components/Form/FormContainer";
 import { formModalClasses } from "../../utils/theme";
 import { redirect, useNavigate } from "react-router-dom";
-import { useAuth } from "../../hooks";
+import { useAuth, useNotification } from "../../hooks";
+import { forgetPassword } from "../../api/auth";
 
 const ForgetPassword = () => {
   const navigate = useNavigate();
   const { authInfo } = useAuth();
+  const [email, setEmail] = useState("");
+  const updateNotification = useNotification();
 
   useEffect(() => {
     if (authInfo?.isLoggedIn) {
@@ -19,16 +22,28 @@ const ForgetPassword = () => {
     }
   }, [authInfo?.isLoggedIn]);
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const validateEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+
+    if (!email.trim()) return updateNotification("error", "Email is required.");
+    if (!validateEmail.test(email))
+      return updateNotification("error", "Invalid Email");
+    const { type, response } = await forgetPassword(email);
+    return updateNotification(type, response);
+  };
+
   return (
     <FormContainer>
       <Container>
-        <form className={`${formModalClasses} w-72`}>
+        <form onSubmit={handleSubmit} className={`${formModalClasses} w-72`}>
           <Title>Forget Password</Title>
           <FormInput
             placeholder={"Your Email"}
             name={"email"}
             label={"Email"}
             type={"email"}
+            onChange={(event) => setEmail(event.target.value)}
           />
           <Submit value={"Send Link"} />
           <div className="flex justify-between items-center">

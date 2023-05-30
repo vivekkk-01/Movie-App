@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState } from "react";
 import { getIsAuth, loginUser } from "../api/auth";
+import { useNotification } from "../hooks";
 export const authContext = createContext();
 
 const defaultAuthInfo = {
@@ -11,12 +12,14 @@ const defaultAuthInfo = {
 
 const AuthProvider = ({ children }) => {
   const [authInfo, setAuthInfo] = useState({ ...defaultAuthInfo });
+  const updateNotification = useNotification();
 
   const handleLogin = async (userData) => {
     setAuthInfo({ ...authInfo, isPending: true });
 
     const { type, response } = await loginUser(userData);
     if (type === "error") {
+      updateNotification(type, response);
       return setAuthInfo({ ...authInfo, isPending: false, error: response });
     } else {
       localStorage.setItem("auth-token", response.accessToken);

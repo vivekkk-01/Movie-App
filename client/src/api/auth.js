@@ -43,3 +43,23 @@ export const getIsAuth = async (token) => {
         return { type: "error", response: err };
     }
 }
+
+export const forgetPassword = async (email) => {
+    try {
+        const { data } = await client.post("/users/forgot-password", { email })
+        return { type: "success", response: data };
+    } catch (error) {
+        const err = error?.response?.data ? error?.response?.data : error?.message ? error?.message : error?.data ? error?.data : "Something went wrong, please try again"
+        return { type: "error", response: err };
+    }
+}
+
+export const resetPassword = async (userData) => {
+    try {
+        const { data } = await client.post("/users/reset-password", userData)
+        return { type: "success", response: data };
+    } catch (error) {
+        const err = error?.response?.data ? error?.response?.data : error?.message ? error?.message : error?.data ? error?.data : "Something went wrong, please try again"
+        return { type: "error", response: err };
+    }
+}
