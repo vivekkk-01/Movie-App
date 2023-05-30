@@ -4,9 +4,9 @@ import Submit from "../../components/Form/Submit";
 import Container from "../../components/Container";
 import FormContainer from "../../components/Form/FormContainer";
 import { formModalClasses } from "../../utils/theme";
-import { useLocation, useNavigate } from "react-router-dom";
+import { redirect, useLocation, useNavigate } from "react-router-dom";
 import { verifyEmail } from "../../api/auth";
-import { useNotification } from "../../hooks";
+import { useAuth, useNotification } from "../../hooks";
 
 const isValidOtp = (otp) => {
   let valid = false;
@@ -23,6 +23,7 @@ const EmailVerification = () => {
   const [activeOtpIndex, setActiveOtpIndex] = useState(0);
   const navigate = useNavigate();
   const updateNotification = useNotification();
+  const { isAuth, authInfo } = useAuth();
   const { state } = useLocation();
   const user = state?.user;
 
@@ -31,6 +32,12 @@ const EmailVerification = () => {
       return navigate("/not-found");
     }
   }, [user]);
+
+  useEffect(() => {
+    if (authInfo.isLoggedIn) {
+      return navigate("/");
+    }
+  }, [authInfo.isLoggedIn]);
 
   const inputRef = useRef();
 
@@ -67,9 +74,12 @@ const EmailVerification = () => {
         OTP: otp.join(""),
         userId: user.id,
       });
-      type === "error"
-        ? updateNotification("error", response)
-        : updateNotification("success", response);
+      if (type === "error") {
+        updateNotification("error", response);
+      } else {
+        updateNotification("success", "You are now verified!");
+        isAuth(response.accessToken);
+      }
     }
   };
 
@@ -104,3 +114,11 @@ const EmailVerification = () => {
 };
 
 export default EmailVerification;
+
+export const loader = () => {
+  const token = localStorage.getItem("auth-token");
+  if (token) {
+    return redirect("/");
+  }
+  return null;
+};

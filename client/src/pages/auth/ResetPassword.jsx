@@ -1,12 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Container from "../../components/Container";
 import Title from "../../components/Form/Title";
 import FormInput from "../../components/Form/FormInput";
 import Submit from "../../components/Form/Submit";
 import { formModalClasses } from "../../utils/theme";
 import FormContainer from "../../components/Form/FormContainer";
+import { redirect, useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks";
 
-const Login = () => {
+const ResetPassword = () => {
+  const navigate = useNavigate();
+  const { authInfo } = useAuth();
+
+  useEffect(() => {
+    if (authInfo?.isLoggedIn) {
+      navigate("/");
+    }
+  }, [authInfo?.isLoggedIn]);
+
   return (
     <FormContainer>
       <Container>
@@ -31,4 +42,12 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ResetPassword;
+
+export const loader = () => {
+  const token = localStorage.getItem("auth-token");
+  if (token) {
+    return redirect("/");
+  }
+  return null;
+};

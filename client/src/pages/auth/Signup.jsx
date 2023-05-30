@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Container from "../../components/Container";
 import Title from "../../components/Form/Title";
 import FormInput from "../../components/Form/FormInput";
@@ -7,8 +7,8 @@ import CustomLink from "../../components/CustomLink";
 import { formModalClasses } from "../../utils/theme";
 import FormContainer from "../../components/Form/FormContainer";
 import { createUser } from "../../api/auth";
-import { useNavigate } from "react-router-dom";
-import { useNotification } from "../../hooks";
+import { redirect, useNavigate } from "react-router-dom";
+import { useAuth, useNotification } from "../../hooks";
 
 const validateUser = ({ name, email, password }) => {
   const validateEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
@@ -37,7 +37,7 @@ const SignUp = () => {
   });
 
   const navigate = useNavigate();
-
+  const { authInfo } = useAuth();
   const updateNotification = useNotification();
 
   const handleChange = ({ target }) => {
@@ -60,6 +60,12 @@ const SignUp = () => {
           });
     }
   };
+
+  useEffect(() => {
+    if (authInfo?.isLoggedIn) {
+      navigate("/");
+    }
+  }, [authInfo?.isLoggedIn]);
 
   return (
     <FormContainer>
@@ -101,3 +107,11 @@ const SignUp = () => {
 };
 
 export default SignUp;
+
+export const loader = () => {
+  const token = localStorage.getItem("auth-token");
+  if (token) {
+    return redirect("/");
+  }
+  return null;
+};
