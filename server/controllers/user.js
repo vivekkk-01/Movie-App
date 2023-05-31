@@ -41,7 +41,7 @@ exports.registerUser = async (req, res) => {
 
         await sgMail.send(msg)
 
-        return res.status(201).json({ id: user._id, name: user.name, email: user.email })
+        return res.status(201).json({ id: user._id, name: user.name, email: user.email, role: user.role })
     } catch (error) {
         return res.status(500).json("Something went wrong, please try again.")
     }
@@ -79,7 +79,7 @@ exports.verifyEmail = async (req, res) => {
         await user.save()
         await EmailVerificationToken.findOneAndDelete({ user: userId })
         const accessToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY)
-        return res.json({ name: user.name, email: user.email, id: user._id, accessToken, isVerified: user.isVerified })
+        return res.json({ name: user.name, email: user.email, id: user._id, accessToken, isVerified: user.isVerified, role: user.role })
     } catch (error) {
         return res.status(500).json("Something went wrong, please try again.")
     }
@@ -214,7 +214,7 @@ exports.loginUser = async (req, res) => {
         const isPassword = await user.comparePassword(password)
         if (!isPassword) return res.status(401).json("Invalid email or password.")
         const accessToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY)
-        return res.json({ name: user.name, email, id: user._id, accessToken, isVerified: user.isVerified })
+        return res.json({ name: user.name, email, id: user._id, accessToken, isVerified: user.isVerified, role: user.role })
     } catch (error) {
         return res.status(500).json("Something went wrong, please try again.")
     }
@@ -223,7 +223,7 @@ exports.loginUser = async (req, res) => {
 exports.isAuth = (req, res) => {
     const { user } = req;
     try {
-        return res.json({ id: user._id, name: user.name, email: user.email, isVerified: user.isVerified })
+        return res.json({ id: user._id, name: user.name, email: user.email, isVerified: user.isVerified, role: user.role })
     } catch (error) {
         return res.status(500).json("Something went wrong, please try again.")
     }

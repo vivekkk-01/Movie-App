@@ -14,3 +14,8 @@ exports.isAuth = async (req, res, next) => {
     })
 }
 
+exports.isAdmin = async (req, res, next) => {
+    if (req.user !== "admin") return res.status(401).json("You are not authorized.")
+    next()
+}
+
