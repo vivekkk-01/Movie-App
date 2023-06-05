@@ -1,6 +1,6 @@
+require("dotenv").config()
 const express = require("express")
 const app = express()
-require("dotenv").config()
 const mongoose = require("mongoose")
 const cors = require('cors')
 const morgan = require("morgan")
@@ -13,11 +13,13 @@ app.use(morgan())
 
 const userRoutes = require("./routes/user")
 const actorRoutes = require("./routes/actor")
+const movieRoutes = require("./routes/movie")
 
 app.use("/api/users", userRoutes)
 app.use("/api/actors", actorRoutes)
+app.use("/api/movies", movieRoutes)
 
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
     console.log(err.message, "Error")
     const errMessage = err ? err : err.message ? err.message : "Something went wrong, please try again!"
     const errStatus = err.status ? err.status : 500;
