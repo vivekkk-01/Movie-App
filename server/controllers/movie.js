@@ -66,3 +66,81 @@ exports.createMovie = async (req, res) => {
         return res.status(error.http_code ? error.http_code : 500).json(error.message ? error.message : "Something went wrong, please try again!")
     }
 }
+
+exports.updateMovie = async (req, res) => {
+    try {
+        let error = validationResult(req)
+        if (!error.isEmpty()) {
+            console.log(error)
+            return res.status(401).json(error.array()[0].msg)
+        }
+        const { movieId } = req.params;
+        const movie = await Movie.findById(movieId)
+        if (!movie) return res.status(404).json("No Movie Found!")
+        if (req.body.director) {
+            if (!isValidObjectId(req.body.director)) return res.status(403).json("Enter a valid Director, please.")
+        }
+        if (req.body.writers) {
+            req.body.writers.forEach(writerId => {
+                if (!isValidObjectId(writerId)) return res.status(403).json("Enter a valid Writer, please.")
+            });
+        }
+        if (req.file) {
+            const posterPublic_id = movie.poster?.public_id
+            if (posterPublic_id) {
+                const { result } = await cloudinary.uploader.destroy(posterPublic_id)
+                if (result !== "ok") return res.status(500).json("Couldn't update the movie poster at the moment.")
+            } else {
+                return;
+            }
+            const filePath = path.join(`public/upload/images/${req.file.filename}`)
+            const { secure_url: url, public_id, responsive_breakpoints } = await cloudinary.v2.uploader.upload(filePath, {
+                transformation: {
+                    width: 1280,
+                    height: 720,
+                },
+                responsive_breakpoints: {
+                    create_derived: true,
+                    max_width: 640,
+                    max_images: 3
+                }
+            })
+            unlink(filePath, (err) => {
+                if (err) {
+                    next(err)
+                }
+            })
+            const breakpoints = responsive_breakpoints[0].breakpoints
+            const finalPoster = { url, public_id, responsive: [] }
+            breakpoints.forEach(image => {
+                finalPoster.responsive.push(image.secure_url)
+            });
+            req.body.poster = finalPoster;
+        }
+        const updatedMovie = await Movie.findByIdAndUpdate(movieId, { ...req.body }, { new: true })
+        return res.json(updatedMovie)
+    } catch (error) {
+        return res.status(error.http_code ? error.http_code : 500).json(error.message ? error.message : "Something went wrong, please try again!")
+    }
+}
+
+exports.deleteMovie = async (req, res) => {
+    try {
+        const { movieId } = req.params;
+        const movie = await Movie.findById(movieId)
+        if (!movie) return res.status(404).json("No Movie Found!")
+        if (movie?.poster) {
+            const { public_id } = movie.poster;
+            const { result } = await cloudinary.uploader.destroy(public_id)
+            if (result !== "ok") return res.status(500).json("Couldn't delete the movie at the moment.")
+        }
+
+        const { public_id } = movie.trailer
+        const { result } = await cloudinary.v2.uploader.destroy(public_id, { resource_type: "video" })
+        if (result !== "ok") return res.status(500).json("Couldn't delete the movie at the moment.")
+        await Movie.findByIdAndDelete(movieId)
+        return res.json("Movie Deleted Successfully!")
+    } catch (error) {
+        return res.status(error.http_code ? error.http_code : 500).json(error.message ? error.message : "Something went wrong, please try again!")
+    }
+}
