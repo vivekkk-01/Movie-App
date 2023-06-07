@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Container from "../components/Container";
 import { useAuth } from "../hooks";
 import { useNavigate } from "react-router-dom";
@@ -8,6 +8,14 @@ const Home = () => {
   const isVerified = authInfo?.profile?.isVerified;
   const { isLoggedIn } = authInfo;
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!authInfo?.isLoggedIn) {
+      navigate("/auth/login");
+    } else if (authInfo?.profile.role === "admin") {
+      navigate("/admin");
+    }
+  }, [authInfo]);
 
   const handleVerification = () => {
     navigate("/auth/verification", {

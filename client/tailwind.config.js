@@ -12,7 +12,8 @@ export default {
       }
     },
     screens: {
-      xs: { "max": "470px" }
+      tab: { "max": "850px", },
+      xs: { "max": "470px" },
     }
   },
   plugins: [],

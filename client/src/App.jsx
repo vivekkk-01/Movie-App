@@ -13,12 +13,25 @@ import ResetPassword, {
 } from "./pages/auth/ResetPassword";
 import NotFound from "./pages/NotFound";
 import Home from "./pages/Home";
+import Dashboard from "./pages/admin/Dashboard";
+import Actors from "./pages/admin/Actors";
+import Movies from "./pages/admin/Movies";
+import AdminRoot from "./pages/admin/AdminRoot";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
     children: [{ index: true, element: <Home /> }],
+  },
+  {
+    path: "/admin",
+    element: <AdminRoot />,
+    children: [
+      { index: true, element: <Dashboard /> },
+      { path: "actors", element: <Actors /> },
+      { path: "movies", element: <Movies /> },
+    ],
   },
   {
     path: "/auth",

@@ -51,7 +51,11 @@ const Login = () => {
 
   useEffect(() => {
     if (authInfo?.isLoggedIn) {
-      navigate("/");
+      if (authInfo?.profile?.role !== "admin") {
+        navigate("/");
+      } else {
+        navigate("/admin");
+      }
     }
   }, [authInfo?.isLoggedIn]);
 
