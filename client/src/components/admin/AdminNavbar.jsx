@@ -16,7 +16,7 @@ const AdminNavbar = () => {
       {!showNav && (
         <button
           onClick={() => setShowNav(true)}
-          className="hidden fixed xs:block text-2xl font-semibold top-3 left-3 cursor-pointer"
+          className="mr-3 hidden fixed xs:block text-2xl font-semibold top-3 left-3 cursor-pointer dark:text-gray-300"
         >
           <GiHamburgerMenu />
         </button>
@@ -24,7 +24,7 @@ const AdminNavbar = () => {
       <div
         className={`${
           showNav ? "xs:block" : "xs:hidden"
-        } xs:h-screen xs:w-2/5 xs:fixed xs:left-0 xs:top-0 xs:pl-2 tab:h-16 tab:mr-0 tab:flex tab:justify-between tab:items-center mr-2 sticky top-0 h-screen  bg-secondary border-r border-gray-400`}
+        } xs:h-screen xs:w-2/5 xs:fixed xs:left-0 xs:top-0 xs:pl-2 tab:h-16 tab:mr-0 tab:flex tab:justify-between tab:items-center mr-2 sticky top-0 h-screen  bg-secondary border-r border-gray-400 z-40`}
       >
         <button
           onClick={() => setShowNav(false)}
