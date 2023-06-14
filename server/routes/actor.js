@@ -5,7 +5,7 @@ const actorControllers = require("../controllers/actor");
 const { uploadImage, validateImage } = require("../middlewares/multer");
 const { isAuth, isAdmin } = require("../middlewares/auth");
 
-routes.post("/", isAuth, isAdmin, uploadImage.single("image"), validateImage, [body("name").trim().not().isEmpty().withMessage("Name is required."), body("about").trim().not().isEmpty().withMessage("About is required field."), body("gender").trim().not().isEmpty().withMessage("Gender is required.")], actorControllers.createActor)
+routes.post("/", isAuth, isAdmin, uploadImage.single("avatar"), validateImage, [body("name").trim().not().isEmpty().withMessage("Name is required."), body("about").trim().not().isEmpty().withMessage("About is required field."), body("gender").trim().not().isEmpty().withMessage("Gender is required.")], actorControllers.createActor)
 
 routes.put("/:actorId", isAuth, isAdmin, uploadImage.single("image"), validateImage, [body("name").trim().not().isEmpty().withMessage("Name is required."), body("about").trim().not().isEmpty().withMessage("About is required field."), body("gender").trim().not().isEmpty().withMessage("Gender is required.")], actorControllers.updateActor)
 

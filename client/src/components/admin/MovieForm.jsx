@@ -269,7 +269,7 @@ const MovieForm = () => {
             name="poster"
             selectedPoster={selectedPoster}
           />
-          <div className="hidden xs:flex xs:flex-col xs:space-y-4">
+          <div className="flex flex-col space-y-4">
             <GenresSelector
               badge={genres.length}
               onClick={() => setShowGenresModal(true)}

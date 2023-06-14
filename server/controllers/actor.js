@@ -33,7 +33,7 @@ exports.createActor = async (req, res, next) => {
                 }
             })
         }
-        return res.status(201).json({ id: actor?._id, name: actor?.name, about: actor?.about, gender: actor?.gender, avatar: actor?.avatar.url })
+        return res.status(201).json({ id: actor?._id, name: actor?.name, about: actor?.about, gender: actor?.gender, avatar: actor?.avatar?.url })
     } catch (error) {
         return res.status(500).json("Something went wrong, please try again!")
     }
@@ -127,7 +127,7 @@ exports.getLatestActors = async (req, res) => {
 exports.getSingleActor = async (req, res) => {
     try {
         const actor = await Actor.findById(req.params.actorId)
-        if(!actor){
+        if (!actor) {
             return res.status(404).json('Actor Not Found!')
         }
         return res.json(actor)

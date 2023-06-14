@@ -1,6 +1,12 @@
 import React from "react";
 
-const ModalContainer = ({ visible, onClose, children, ignoreContainer }) => {
+const ModalContainer = ({
+  visible,
+  onClose,
+  children,
+  ignoreContainer,
+  modalClassName,
+}) => {
   if (!visible) return;
 
   const handleClose = ({ target }) => {
@@ -17,7 +23,12 @@ const ModalContainer = ({ visible, onClose, children, ignoreContainer }) => {
       {ignoreContainer ? (
         children
       ) : (
-        <div className="p-2 dark:bg-primary bg-white rounded w-[45rem] h-[40rem] overflow-auto">
+        <div
+          className={
+            modalClassName +
+            " p-2 dark:bg-primary bg-white rounded w-[45rem] h-[40rem] overflow-auto"
+          }
+        >
           {children}
         </div>
       )}

@@ -3,7 +3,14 @@ import React from "react";
 const commonPosterUI =
   "flex cursor-pointer justify-center items-center border border-dashed rounded aspect-video dark:border-dark-subtle border-light-subtle";
 
-const SelectPoster = ({ name, selectedPoster, accept, onChange }) => {
+const SelectPoster = ({
+  name,
+  selectedPoster,
+  accept,
+  onChange,
+  className,
+  label,
+}) => {
   return (
     <div>
       <input
@@ -17,11 +24,11 @@ const SelectPoster = ({ name, selectedPoster, accept, onChange }) => {
       <label htmlFor={name}>
         {selectedPoster ? (
           <img
-            className={commonPosterUI + " object-cover"}
+            className={className + commonPosterUI + " object-cover"}
             src={selectedPoster}
           />
         ) : (
-          <PosterUI />
+          <PosterUI label={label} className={className} />
         )}
       </label>
     </div>
@@ -30,11 +37,11 @@ const SelectPoster = ({ name, selectedPoster, accept, onChange }) => {
 
 export default SelectPoster;
 
-const PosterUI = () => {
+const PosterUI = ({ className, label }) => {
   return (
-    <div className={commonPosterUI}>
+    <div className={className + " " + commonPosterUI}>
       <span className="dark:text-dark-subtle text-light-subtle">
-        Select Poster
+        {label || "Select Poster"}
       </span>
     </div>
   );

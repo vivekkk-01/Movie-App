@@ -5,8 +5,9 @@ import { FileUploader } from "react-drag-drop-files";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import "./Movie.css";
 import MovieForm from "./MovieForm";
+import ModalContainer from "../modals/ModalContainer";
 
-const MovieUpload = () => {
+const MovieUpload = ({ visible, onClose }) => {
   const [videoSelected, setVideoSelected] = useState(false);
   const [videoUploaded, setVideoUploaded] = useState(false);
   const [trailerInfo, setTrailerInfo] = useState({});
@@ -19,7 +20,6 @@ const MovieUpload = () => {
     setVideoUploaded(true);
     setTrailerInfo({ url: response.secure_url, public_id: response.public_id });
   };
-  console.log(trailerInfo);
 
   const updateNotification = useNotification();
 
@@ -28,28 +28,27 @@ const MovieUpload = () => {
   };
 
   return (
-    <div
-      style={{}}
-      className="fixed inset-0 dark:bg-white dark:bg-opacity-50 bg-primary bg-opacity-50 backdrop-blur-sm flex items-center justify-center"
+    <ModalContainer
+      visible={visible}
+      onClose={onClose}
+      modalClassName="xs:overflow-x-hidden xs:w-[25rem] xs:h-[30rem]"
     >
-      <div className="p-2 dark:bg-primary bg-white rounded xs:overflow-x-hidden xs:w-[25rem] xs:h-[30rem] w-[45rem] h-[40rem] overflow-auto">
-        {/* <UploadProgress
+      {/* <UploadProgress
           visible={!videoUploaded && videoSelected}
           width={progress}
           message={
             !videoUploaded && progress == 100
-              ? "Processing Video"
-              : `Upload Progress ${progress}%`
+            ? "Processing Video"
+            : `Upload Progress ${progress}%`
           }
-        />
+          />
         <TrailerSelector
-          handleTypeError={handleTypeError}
-          handleChange={handleChange}
-          visible={!videoSelected}
-        /> */}
-        <MovieForm />
-      </div>
-    </div>
+        handleTypeError={handleTypeError}
+        handleChange={handleChange}
+        visible={!videoSelected}
+      /> */}
+      <MovieForm />
+    </ModalContainer>
   );
 };
 

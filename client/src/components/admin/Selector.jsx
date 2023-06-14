@@ -9,15 +9,9 @@ const Selector = ({ name, label, value, onChange, options }) => {
       onChange={onChange}
       className="border-2 dark:border-dark-subtle border-light-subtle dark:focus:border-white focus:border-primary p-1 pr-10 outline-none transition rounded bg-transparent text-light-subtle dark:text-dark-subtle dark:focus:text-white focus:text-primary dark:bg-primary"
     >
-      <option
-        value={label}
-      >
-        {label}
-      </option>
+      <option>{label}</option>
       {options.map(({ title, value }) => (
-        <option
-          value={value}
-        >
+        <option key={title} value={value}>
           {title}
         </option>
       ))}
