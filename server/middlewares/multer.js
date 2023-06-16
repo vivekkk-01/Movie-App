@@ -55,9 +55,6 @@ exports.validateVideo = (req, res, next) => {
 }
 
 exports.validatePoster = (req, res, next) => {
-    if (!req.file) {
-        return res.status(403).json("Please provide a image file.")
-    }
     if (req.file && !req.file.mimetype.startsWith("image")) {
         return res.status(403).json("Please provide a poster.")
     }

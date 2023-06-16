@@ -10,7 +10,7 @@ const ModalContainer = ({
   if (!visible) return;
 
   const handleClose = ({ target }) => {
-    if (target.id === "modal-container") onClose();
+    if (target.id === "modal-container") onClose && onClose();
   };
 
   return (

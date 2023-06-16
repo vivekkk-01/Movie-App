@@ -15,14 +15,10 @@ export default function LiveSearch({
   renderItem = null,
   onChange = null,
   onSelect = null,
+  visible,
 }) {
   const [displaySearch, setDisplaySearch] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
-  const [defaultValue, setDefaultValue] = useState("");
-
-  useEffect(() => {
-    if (value) setDefaultValue(value);
-  }, [value]);
 
   const handleOnFocus = () => {
     if (results.length) setDisplaySearch(true);
@@ -71,9 +67,13 @@ export default function LiveSearch({
   };
 
   const handleChange = (e) => {
-    setDefaultValue(e.target.value);
     onChange(e);
   };
+
+  useEffect(() => {
+    if (visible) return setDisplaySearch(visible);
+    setDisplaySearch(false);
+  }, [visible]);
 
   return (
     <div
@@ -83,14 +83,16 @@ export default function LiveSearch({
       className="relative outline-none"
     >
       <input
-        onClick={() => setDisplaySearch(!displaySearch)}
+        // onClick={() => {
+        //   setDisplaySearch(!displaySearch);
+        // }}
         type="text"
         id={name}
         name={name}
         className={getInputStyle()}
         placeholder={placeholder}
         onFocus={handleOnFocus}
-        value={defaultValue}
+        value={value}
         onChange={handleChange}
       />
       <SearchResults
@@ -105,15 +107,6 @@ export default function LiveSearch({
     </div>
   );
 }
-
-// const renderItem = ({ id, name, avatar }) => {
-//   return (
-//     <div className="flex">
-//       <img src={avatar} alt="" />
-//       <p>{name}</p>
-//     </div>
-//   );
-// };
 
 const SearchResults = ({
   visible,
@@ -133,7 +126,7 @@ const SearchResults = ({
     });
   }, [focusedIndex]);
 
-  if (!visible) return null;
+  if (!visible || !results.length) return null;
 
   return (
     <div className="absolute z-50 right-0 left-0 top-10 bg-white dark:bg-secondary shadow-md p-2 max-h-64 space-y-2 mt-1 overflow-auto custom-scroll-bar">
@@ -146,7 +139,7 @@ const SearchResults = ({
         return (
           <ResultCard
             ref={index === focusedIndex ? resultContainer : null}
-            key={result.id}
+            key={result._id}
             item={result}
             renderItem={renderItem}
             resultContainerStyle={resultContainerStyle}

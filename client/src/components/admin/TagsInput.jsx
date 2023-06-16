@@ -91,7 +91,7 @@ export default TagsInput;
 const Tag = ({ children, onClick }) => (
   <span className="whitespace-nowrap dark:bg-white bg-primary dark:text-primary text-white flex items-center px-1 text-sm">
     {children}
-    <button onClick={onClick}>
+    <button type="button" onClick={onClick}>
       <AiOutlineClose size={12} />
     </button>
   </span>

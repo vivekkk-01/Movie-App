@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import TagsInput from "./TagsInput";
 import LiveSearch from "./LiveSearch";
 import Submit from "../Form/Submit";
-import { useNotification } from "../../hooks";
-import ModalContainer from "../modals/ModalContainer";
+import { useNotification, useSearch } from "../../hooks";
 import WritersModal from "../modals/WritersModal";
 import CastForm from "./CastForm";
 import CastModal from "../modals/CastModal";
@@ -16,51 +15,39 @@ import {
   statusOptions,
   typeOptions,
 } from "../../utils/options";
+import { searchActor } from "../../api/actor";
 
 const commonClasses = `dark:text-white text-primary dark:border-dark-subtle
 border-light-subtle dark:focus:border-white focus:border-primary
 transition outline-none w-full bg-transparent dark:bg-transparent`;
 
-const results = [
-  {
-    id: "1",
-    avatar:
-      "https://images.unsplash.com/photo-1643713303351-01f540054fd7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
-    name: "John Doe",
-  },
-  {
-    id: "2",
-    avatar:
-      "https://images.unsplash.com/photo-1643883135036-98ec2d9e50a1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
-    name: "Chandri Anggara",
-  },
-  {
-    id: "3",
-    avatar:
-      "https://images.unsplash.com/photo-1578342976795-062a1b744f37?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
-    name: "Amin RK",
-  },
-  {
-    id: "4",
-    avatar:
-      "https://images.unsplash.com/photo-1564227901-6b1d20bebe9d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
-    name: "Edward Howell",
-  },
-  {
-    id: "5",
-    avatar:
-      "https://images.unsplash.com/photo-1578342976795-062a1b744f37?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
-    name: "Amin RK",
-  },
-  {
-    id: "6",
-    avatar:
-      "https://images.unsplash.com/photo-1564227901-6b1d20bebe9d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
-    name: "Edward Howell",
-  },
-];
+const validateMovie = (movieInfo) => {
+  const {
+    title,
+    storyLine,
+    language,
+    releaseDate,
+    status,
+    type,
+    genres,
+    tags,
+    cast,
+    poster,
+  } = movieInfo;
+  if (!title.trim()) return { error: "Title is missing" };
+  if (!storyLine.trim()) return { error: "Story Line is missing!" };
+  if (!language.trim()) return { error: "Language is missing!" };
+  if (!releaseDate.trim()) return { error: "Release Date is missing!" };
+  if (!status.trim()) return { error: "Status is missing!" };
+  if (!type.trim()) return { error: "Type is missing!" };
+  if (!genres.length) return { error: "Genres are missing!" };
+  if (!cast.length) return { error: "Cast is missing!" };
+  if (!tags.length) return { error: "Tags are missing!" };
+  if (!poster) return { error: "Movie Poster is missing!" };
+  return { error: null };
+};
 
-const MovieForm = () => {
+const MovieForm = ({ onSubmit, busy }) => {
   const defaultMovieInfo = {
     title: "",
     storyLine: "",
@@ -73,7 +60,7 @@ const MovieForm = () => {
     genres: [],
     type: "",
     status: "",
-    langauge: "",
+    language: "",
   };
 
   const [movieInfo, setMovieInfo] = useState(defaultMovieInfo);
@@ -81,18 +68,14 @@ const MovieForm = () => {
   const [showCastModal, setShowCastModal] = useState(false);
   const [showGenresModal, setShowGenresModal] = useState(false);
   const [selectedPoster, setSelectedPoster] = useState(null);
+  const [writerName, setWriterName] = useState("");
+  const [directorName, setDirectorName] = useState("");
+  const [writersProfile, setWritersProfile] = useState([]);
+  const [directorsProfile, setDirectorsProfile] = useState([]);
   const updateNotification = useNotification();
-  const {
-    title,
-    storyLine,
-    director,
-    writers,
-    cast,
-    genres,
-    type,
-    status,
-    langauge,
-  } = movieInfo;
+  const { handleSearch, resetSearch } = useSearch();
+  const { title, storyLine, writers, cast, genres, type, status, language } =
+    movieInfo;
 
   const updatePoster = (poster) => {
     const url = URL.createObjectURL(poster);
@@ -103,11 +86,27 @@ const MovieForm = () => {
     const { value, name, files } = target;
     if (name === "poster") {
       const poster = files[0];
+      setMovieInfo((prev) => {
+        return { ...prev, poster };
+      });
       updatePoster(poster);
+      return;
     }
     setMovieInfo((prev) => {
       return { ...prev, [name]: value };
     });
+  };
+
+  const handleProfileChange = ({ target }) => {
+    const { value, name } = target;
+    if (name === "writers") {
+      setWriterName(value);
+      handleSearch(searchActor, value, setWritersProfile);
+    }
+    if (name === "director") {
+      setDirectorName(value);
+      handleSearch(searchActor, value, setDirectorsProfile);
+    }
   };
 
   const updateTags = (tags) => {
@@ -118,11 +117,16 @@ const MovieForm = () => {
 
   const updateDirector = (profile) => {
     setMovieInfo({ ...movieInfo, director: profile });
+    resetSearch();
+    setDirectorsProfile([]);
+    setDirectorName(profile.name);
   };
 
   const updateWriters = (profile) => {
+    setWriterName("");
+    setWritersProfile([]);
     const { writers } = movieInfo;
-    const isWriter = writers.find((writer) => writer.id === profile.id);
+    const isWriter = writers.find((writer) => writer._id === profile._id);
     if (isWriter)
       return updateNotification("warning", "This profile is already selected!");
     setMovieInfo((prev) => {
@@ -142,7 +146,11 @@ const MovieForm = () => {
   const renderItem = (result) => {
     return (
       <div className="flex rounded overflow-hidden">
-        <img src={result.avatar} alt="" className="w-16 h-16 object-cover" />
+        <img
+          src={result.avatar.url}
+          alt=""
+          className="w-16 h-16 object-cover"
+        />
         <p className="dark:text-white font-semibold">{result.name}</p>
       </div>
     );
@@ -150,12 +158,14 @@ const MovieForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(movieInfo);
+    const { error } = validateMovie(movieInfo);
+    if (error) return updateNotification("error", error);
+    onSubmit(movieInfo);
   };
 
   const removeWriterHandler = (writerId) => {
     const { writers } = movieInfo;
-    const newWriters = writers.filter((writer) => writer.id !== writerId);
+    const newWriters = writers.filter((writer) => writer._id !== writerId);
     setMovieInfo((prev) => {
       return { ...prev, writers: newWriters };
     });
@@ -164,7 +174,7 @@ const MovieForm = () => {
 
   const removeCastHandler = (profileId) => {
     const { cast } = movieInfo;
-    const newCast = cast.filter(({ profile }) => profile.id !== profileId);
+    const newCast = cast.filter(({ profile }) => profile._id !== profileId);
     setMovieInfo((prev) => {
       return { ...prev, cast: newCast };
     });
@@ -214,11 +224,13 @@ const MovieForm = () => {
             <InputLabel htmlFor="director">Director</InputLabel>
             <LiveSearch
               name="director"
-              results={results}
+              results={directorsProfile}
               placeholder="Search profile"
               renderItem={renderItem}
               onSelect={updateDirector}
-              value={director.name}
+              value={directorName}
+              onChange={handleProfileChange}
+              visible={directorsProfile.length}
             />
           </div>
           <div>
@@ -235,10 +247,13 @@ const MovieForm = () => {
             </div>
             <LiveSearch
               name="writers"
-              results={results}
+              results={writersProfile}
               placeholder="Search profile"
               renderItem={renderItem}
               onSelect={updateWriters}
+              value={writerName}
+              onChange={handleProfileChange}
+              visible={writersProfile.length}
             />
           </div>
           <div>
@@ -259,8 +274,14 @@ const MovieForm = () => {
             type="date"
             name="releaseDate"
             className={commonClasses + " w-auto border-2 rounded p-1"}
+            onChange={handleChange}
           />
-          <Submit value="Upload" />
+          <Submit
+            busy={busy}
+            value="Upload"
+            type="button"
+            onClick={handleSubmit}
+          />
         </div>
         <div className="xs:w-80 w-[30%] space-y-4">
           <SelectPoster
@@ -269,7 +290,7 @@ const MovieForm = () => {
             name="poster"
             selectedPoster={selectedPoster}
           />
-          <div className="flex flex-col space-y-4">
+          <div className="xs:flex flex-col space-y-4">
             <GenresSelector
               badge={genres.length}
               onClick={() => setShowGenresModal(true)}
@@ -283,7 +304,7 @@ const MovieForm = () => {
             />
             <Selector
               name="language"
-              value={langauge}
+              value={language}
               options={languageOptions}
               label="Language"
               onChange={handleChange}

@@ -1,49 +1,12 @@
 import React, { useState } from "react";
 import LiveSearch from "./LiveSearch";
 import { useNotification } from "../../hooks";
+import { searchActor } from "../../api/actor";
+import { useSearch } from "../../hooks";
 
 const commonClasses = `dark:text-white text-primary dark:border-dark-subtle
 border-light-subtle dark:focus:border-white focus:border-primary
 transition outline-none w-full bg-transparent dark:bg-transparent`;
-
-const results = [
-  {
-    id: "1",
-    avatar:
-      "https://images.unsplash.com/photo-1643713303351-01f540054fd7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
-    name: "John Doe",
-  },
-  {
-    id: "2",
-    avatar:
-      "https://images.unsplash.com/photo-1643883135036-98ec2d9e50a1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
-    name: "Chandri Anggara",
-  },
-  {
-    id: "3",
-    avatar:
-      "https://images.unsplash.com/photo-1578342976795-062a1b744f37?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
-    name: "Amin RK",
-  },
-  {
-    id: "4",
-    avatar:
-      "https://images.unsplash.com/photo-1564227901-6b1d20bebe9d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
-    name: "Edward Howell",
-  },
-  {
-    id: "5",
-    avatar:
-      "https://images.unsplash.com/photo-1578342976795-062a1b744f37?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
-    name: "Amin RK",
-  },
-  {
-    id: "6",
-    avatar:
-      "https://images.unsplash.com/photo-1564227901-6b1d20bebe9d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
-    name: "Edward Howell",
-  },
-];
 
 const defaultCastInfo = {
   profile: {},
@@ -52,14 +15,20 @@ const defaultCastInfo = {
 };
 
 const CastForm = ({ onSubmit }) => {
+  const [castProfiles, setCastProfiles] = useState([]);
   const updateNotification = useNotification();
   const [castInfo, setCastInfo] = useState({ ...defaultCastInfo });
   const { leadActor, profile, roleAs } = castInfo;
+  const { handleSearch, resetSearch } = useSearch();
 
   const renderItem = (result) => {
     return (
       <div className="flex rounded overflow-hidden">
-        <img src={result.avatar} alt="" className="w-16 h-16 object-cover" />
+        <img
+          src={result.avatar.url}
+          alt=""
+          className="w-16 h-16 object-cover"
+        />
         <p className="dark:text-white font-semibold">{result.name}</p>
       </div>
     );
@@ -80,8 +49,18 @@ const CastForm = ({ onSubmit }) => {
   const handleSubmit = () => {
     if (!profile) return updateNotification("error", "Cast is missing!");
     if (!roleAs) return updateNotification("error", "Cast role is missing!");
-    setCastInfo({ ...defaultCastInfo });
+    setCastInfo({ ...defaultCastInfo, profile: { name: "" } });
     onSubmit(castInfo);
+    resetSearch();
+    setCastProfiles();
+  };
+
+  const handleProfileChange = ({ target }) => {
+    const { value } = target;
+    const { profile } = castInfo;
+    profile.name = value;
+    setCastInfo({ ...castInfo, ...profile });
+    handleSearch(searchActor, value, setCastProfiles);
   };
 
   return (
@@ -96,10 +75,12 @@ const CastForm = ({ onSubmit }) => {
       />
       <LiveSearch
         placeholder="Search Profile"
-        results={results}
+        results={castProfiles}
         value={profile.name}
         renderItem={renderItem}
         onSelect={handleOnSelect}
+        onChange={handleProfileChange}
+        visible={castProfiles?.length}
       />
       <span className="dark:text-dark-subtle text-light-subtle font-semibold">
         as

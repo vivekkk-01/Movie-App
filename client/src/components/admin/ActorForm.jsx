@@ -16,7 +16,6 @@ const defaultActorInfo = {
 };
 
 const validateActorInfo = ({ avatar, name, about, gender }) => {
-  console.log(avatar);
   if (!name.trim()) return { error: "Actor name is missing!" };
   if (!about.trim()) return { error: "About section is missing!" };
   if (

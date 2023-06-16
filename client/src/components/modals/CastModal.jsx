@@ -7,14 +7,14 @@ const CastModal = ({ casts = [], visible, onClose, onRemoveClick }) => {
     <ModalContainer ignoreContainer={true} onClose={onClose} visible={visible}>
       <div className="space-y-2 p-2 dark:bg-primary bg-white rounded w-max-[45rem] h-max-[40rem] overflow-auto">
         {casts.map(({ leadActor, profile, roleAs }) => {
-          const { id, name, avatar } = profile;
+          const { _id, name, avatar } = profile;
           return (
             <div
-              key={id}
+              key={_id}
               className="flex space-x-2 items-center dark:bg-secondary bg-white drop-shadow-md rounded"
             >
               <img
-                src={avatar}
+                src={avatar.url}
                 alt={name}
                 className="w-16 h-16 rounded object-cover aspect-square"
               />
@@ -32,7 +32,7 @@ const CastModal = ({ casts = [], visible, onClose, onRemoveClick }) => {
                 )}
               </div>
               <button
-                onClick={() => onRemoveClick(id)}
+                onClick={() => onRemoveClick(_id)}
                 className="dark:text-white text-primary hover:opacity-80 transition p-2"
               >
                 <AiOutlineClose />
