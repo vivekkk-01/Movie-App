@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SelectPoster from "./SelectPoster";
 import Selector from "./Selector";
 import { useNotification } from "../../hooks";
@@ -29,7 +29,7 @@ const validateActorInfo = ({ avatar, name, about, gender }) => {
   return { error: null };
 };
 
-const ActorForm = ({ title, btnTitle, onSubmit, busy }) => {
+const ActorForm = ({ title, btnTitle, onSubmit, busy, initialState }) => {
   const [actorInfo, setActorInfo] = useState({ ...defaultActorInfo });
   const [selectedAvatar, setSelectedAvatar] = useState(null);
   const updateNotification = useNotification();
@@ -65,6 +65,13 @@ const ActorForm = ({ title, btnTitle, onSubmit, busy }) => {
     { title: "Female", value: "female" },
     { title: "Other", value: "other" },
   ];
+
+  useEffect(() => {
+    if (initialState) {
+      setActorInfo({ ...initialState, avatar: null });
+      setSelectedAvatar(initialState.avatar.url);
+    }
+  }, [initialState]);
 
   return (
     <form
@@ -102,6 +109,7 @@ const ActorForm = ({ title, btnTitle, onSubmit, busy }) => {
             placeholder="Enter Name"
             type="text"
             className={commonClasses + " border border-b-2 p-1"}
+            value={actorInfo?.name}
           />
           <textarea
             name="about"
@@ -110,6 +118,7 @@ const ActorForm = ({ title, btnTitle, onSubmit, busy }) => {
             className={
               commonClasses + " h-full border border-b-2 resize-none p-1"
             }
+            value={actorInfo?.about}
           ></textarea>
         </div>
       </div>

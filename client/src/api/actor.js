@@ -44,3 +44,33 @@ export const getActors = async (pageNo, limit) => {
         return { type: "error", response: err };
     }
 }
+
+export const updateActor = async (id, actorData) => {
+    const token = localStorage.getItem("auth-token")
+    try {
+        const { data } = await client.put("/actors/" + id, actorData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        return { type: "success", response: data };
+    } catch (error) {
+        const err = error?.response?.data ? error?.response?.data : error?.message ? error?.message : error?.data ? error?.data : "Something went wrong, please try again"
+        return { type: "error", response: err };
+    }
+}
+
+export const deleteActor = async (id) => {
+    const token = localStorage.getItem("auth-token")
+    try {
+        const { data } = await client.delete("/actors/" + id, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        return { type: "success", response: data };
+    } catch (error) {
+        const err = error?.response?.data ? error?.response?.data : error?.message ? error?.message : error?.data ? error?.data : "Something went wrong, please try again"
+        return { type: "error", response: err };
+    }
+}

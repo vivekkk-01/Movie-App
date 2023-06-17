@@ -25,7 +25,13 @@ const SearchProvider = ({ children }) => {
     const { type, response } = await method(query);
     setSearching(false);
     if (type === "error") return updateNotification(type, response);
-    if (!response.length) return setNotFound(true);
+    if (!response.length) {
+      setResults([]);
+      updaterFunc && updaterFunc([]);
+      return setNotFound(true);
+    }
+
+    setNotFound(false);
     setResults(response);
     updaterFunc && updaterFunc([...response]);
   };
@@ -44,7 +50,7 @@ const SearchProvider = ({ children }) => {
   const resetSearch = () => {
     setSearching(false);
     setResults([]);
-    setNotFound(true);
+    setNotFound(false);
   };
 
   return (

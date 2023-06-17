@@ -18,9 +18,12 @@ const MovieListItem = ({ movie, onDelete, onEdit, onOpen }) => {
                 {title}
               </h1>
               <div className="space-x-1">
-                {genres.map((genre) => {
+                {genres.map((genre, index) => {
                   return (
-                    <span className="text-xs text-primary dark:text-white">
+                    <span
+                      key={genre + index}
+                      className="text-xs text-primary dark:text-white"
+                    >
                       {genre}
                     </span>
                   );

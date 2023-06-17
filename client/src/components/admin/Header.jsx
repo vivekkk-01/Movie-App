@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { BsFillSunFill } from "react-icons/bs";
 import { AiOutlinePlus } from "react-icons/ai";
 import { useTheme } from "../../hooks";
+import AppSearchForm from "../Form/AppSearchForm";
 
 const Header = ({ onAddMovieClick, onAddActorClick }) => {
   const [showOptions, setShowOptions] = useState(false);
@@ -9,12 +10,7 @@ const Header = ({ onAddMovieClick, onAddActorClick }) => {
 
   return (
     <div className="p-4 relative flex items-center justify-between">
-      <input
-        type="text"
-        className="border-2 dark:border-dark-subtle border-light-subtle dark:focus:border-white focus:border-primary dark:text-white transition bg-transparent rounded text-lg p-1 outline-none"
-        placeholder="Search Movies..."
-      />
-
+      <AppSearchForm placeholder={"Search Movies..."} />
       <div className="flex items-center space-x-3 xs:block">
         <button
           onClick={toggleTheme}

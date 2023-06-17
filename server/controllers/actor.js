@@ -76,7 +76,7 @@ exports.updateActor = async (req, res, next) => {
                 }
             })
         }
-        return res.status(201).json({ id: actor?._id, name: actor?.name, about: actor?.about, gender: actor?.gender, avatar: actor?.avatar.url })
+        return res.status(201).json({ _id: actor?._id, name: actor?.name, about: actor?.about, gender: actor?.gender, avatar: actor?.avatar })
     } catch (error) {
         return res.status(500).json("Something went wrong, please try again!")
     }
@@ -96,7 +96,7 @@ exports.deleteActor = async (req, res) => {
                 return res.status(500).json("Couldn't update the image.")
             }
         }
-        return res.json("Record Deleted Successfully!")
+        return res.json("Profile Deleted Successfully!")
     } catch (error) {
         return res.status(500).json("Something went wrong, please try again!")
     }
@@ -105,7 +105,9 @@ exports.deleteActor = async (req, res) => {
 exports.searchActor = async (req, res) => {
     try {
         const { name } = req.query;
-        const actors = await Actor.find({ $text: { $search: `"${name}"` } })
+        if (!name) return res.status(403).json("Invalid request.")
+        // const actors = await Actor.find({ $text: { $search: `"${name}"` } })
+        const actors = await Actor.find({ name: { $regex: name, $options: "i" } })
         if (!actors) {
             return res.status(403).json("No Actors Found!")
         }
