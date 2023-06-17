@@ -135,3 +135,13 @@ exports.getSingleActor = async (req, res) => {
         return res.status(500).json("Something went wrong, please try again!")
     }
 }
+
+exports.getActors = async (req, res) => {
+    try {
+        const { pageNo, limit } = req.query;
+        const actors = await Actor.find().sort({ createdAt: "-1" }).skip(+pageNo * +limit).limit(+limit)
+        return res.json(actors)
+    } catch (error) {
+        return res.status(500).json("Something went wrong, please try again!")
+    }
+}

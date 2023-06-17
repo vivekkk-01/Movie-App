@@ -144,3 +144,13 @@ exports.deleteMovie = async (req, res) => {
         return res.status(error.http_code ? error.http_code : 500).json(error.message ? error.message : "Something went wrong, please try again!")
     }
 }
+
+exports.getMovies = async (req, res) => {
+    try {
+        const { pageNo = 0, limit = 10 } = req.query;
+        const movies = await Movie.find().sort({ createdAt: -1 }).skip(+pageNo * +limit).limit(+limit)
+        return res.json(movies)
+    } catch (error) {
+        return res.status(error.http_code ? error.http_code : 500).json(error.message ? error.message : "Something went wrong, please try again!")
+    }
+}

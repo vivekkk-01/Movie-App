@@ -85,4 +85,6 @@ routes.patch("/:movieId", isAuth, isAdmin, uploadImage.single("poster"), validat
 
 routes.delete("/:movieId", isAuth, isAdmin, movieControllers.deleteMovie)
 
+routes.get("/", isAuth, isAdmin, movieControllers.getMovies)
+
 module.exports = routes;

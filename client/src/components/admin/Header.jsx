@@ -31,7 +31,7 @@ const Header = ({ onAddMovieClick, onAddActorClick }) => {
         </button>
 
         {showOptions && (
-          <div className="absolute right-2 top-16 flex flex-col space-y-3 p-5 dark:bg-secondary bg-white drop-shadow-lg rounded animate-scale">
+          <div className="absolute right-2 top-16 flex flex-col space-y-3 p-5 dark:bg-secondary bg-white drop-shadow-lg rounded animate-scale z-50">
             <button
               onClick={onAddMovieClick}
               className="dark:text-white text-secondary hover:opacity-80 transition"

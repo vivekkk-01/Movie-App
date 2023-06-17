@@ -34,7 +34,7 @@ const AdminRoot = () => {
         <nav className="w-1/6 tab:w-screen xs:absolute">
           <AdminNavbar />
         </nav>
-        <main className="w-11/12 tab:w-screen xs:pt-7 h-screen">
+        <main className="w-11/12 tab:w-screen xs:pt-7">
           <Header
             onAddActorClick={handleActorClick}
             onAddMovieClick={handleMovieClick}

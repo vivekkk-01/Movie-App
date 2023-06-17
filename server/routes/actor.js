@@ -15,6 +15,8 @@ routes.get("/search", actorControllers.searchActor)
 
 routes.get("/latest-uploads", actorControllers.getLatestActors)
 
+routes.get("/", isAuth, isAdmin, actorControllers.getActors)
+
 routes.get("/:actorId", actorControllers.getSingleActor)
 
 module.exports = routes;
