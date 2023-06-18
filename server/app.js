@@ -14,10 +14,12 @@ app.use(morgan())
 const userRoutes = require("./routes/user")
 const actorRoutes = require("./routes/actor")
 const movieRoutes = require("./routes/movie")
+const reviewRoutes = require("./routes/review")
 
 app.use("/api/users", userRoutes)
 app.use("/api/actors", actorRoutes)
 app.use("/api/movies", movieRoutes)
+app.use("/api/reviews", reviewRoutes)
 
 app.use((err, req, res, next) => {
     console.log(err.message, "Error")
