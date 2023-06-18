@@ -15,10 +15,7 @@ const movieSchema = new Schema({
     },
     director: {
         type: Schema.Types.ObjectId,
-        trim: true
-    },
-    releaseDate: {
-        type: Date,
+        ref: "Actor",
         required: true,
     },
     status: {
@@ -76,6 +73,10 @@ const movieSchema = new Schema({
     ],
     language: {
         type: String,
+        required: true
+    },
+    releaseDate: {
+        type: Date,
         required: true
     }
 }, { timestamps: true })

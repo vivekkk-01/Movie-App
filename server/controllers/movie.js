@@ -118,7 +118,7 @@ exports.updateMovie = async (req, res) => {
             req.body.poster = finalPoster;
         }
         const updatedMovie = await Movie.findByIdAndUpdate(movieId, { ...req.body }, { new: true })
-        return res.json(updatedMovie)
+        return res.json({ _id: updatedMovie._id, title: updatedMovie.title, genres: updatedMovie.genres, poster: updatedMovie.poster, status: updatedMovie.status })
     } catch (error) {
         return res.status(error.http_code ? error.http_code : 500).json(error.message ? error.message : "Something went wrong, please try again!")
     }
@@ -150,6 +150,57 @@ exports.getMovies = async (req, res) => {
         const { pageNo = 0, limit = 10 } = req.query;
         const movies = await Movie.find().sort({ createdAt: -1 }).skip(+pageNo * +limit).limit(+limit)
         return res.json(movies)
+    } catch (error) {
+        return res.status(error.http_code ? error.http_code : 500).json(error.message ? error.message : "Something went wrong, please try again!")
+    }
+}
+
+exports.getMovieData = async (req, res) => {
+    try {
+        const { movieId } = req.params;
+        const movie = await Movie.findById(movieId).populate("director").populate("writers cast.actor")
+        if (!movie) return res.status(404).json("Not Found")
+        return res.json({
+            _id: movie._id,
+            title: movie.title,
+            storyLine: movie.storyLine,
+            tags: movie.tags,
+            genres: movie.genres,
+            poster: movie.poster,
+            releaseDate: movie.releaseDate,
+            status: movie.status,
+            type: movie.type,
+            language: movie.language,
+            director: movie.director,
+            writers: movie.writers,
+            cast: movie.cast.map(c => {
+                return {
+                    _id: c._id,
+                    profile: c.actor,
+                    roleAs: c.roleAs,
+                    leadActor: c.leadActor
+                }
+            })
+        })
+    } catch (error) {
+        return res.status(error.http_code ? error.http_code : 500).json(error.message ? error.message : "Something went wrong, please try again!")
+    }
+}
+
+exports.searchMovies = async (req, res) => {
+    try {
+        const { title } = req.query;
+        if (!title) return;
+        const movies = await Movie.find({ title: { $regex: title, $options: "i" } })
+        return res.json(movies?.map(movie => {
+            return {
+                _id: movie._id,
+                title: movie.title,
+                poster: movie.poster,
+                status: movie.status,
+                genres: movie.genres
+            }
+        }))
     } catch (error) {
         return res.status(error.http_code ? error.http_code : 500).json(error.message ? error.message : "Something went wrong, please try again!")
     }

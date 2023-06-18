@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TagsInput from "./TagsInput";
 import LiveSearch from "./LiveSearch";
 import Submit from "../Form/Submit";
@@ -47,7 +47,7 @@ const validateMovie = (movieInfo) => {
   return { error: null };
 };
 
-const MovieForm = ({ onSubmit, busy }) => {
+const MovieForm = ({ onSubmit, busy, initialState, btnTitle }) => {
   const defaultMovieInfo = {
     title: "",
     storyLine: "",
@@ -160,7 +160,36 @@ const MovieForm = ({ onSubmit, busy }) => {
     e.preventDefault();
     const { error } = validateMovie(movieInfo);
     if (error) return updateNotification("error", error);
-    onSubmit(movieInfo);
+    const { tags, genres, cast, writers, director } = movieInfo;
+    const finalData = { ...movieInfo };
+    finalData.tags = JSON.stringify(tags);
+    finalData.genres = JSON.stringify(genres);
+
+    const finalCast = cast.map((e) => {
+      return {
+        actor: e.profile._id,
+        leadActor: e.leadActor,
+        roleAs: e.roleAs,
+      };
+    });
+
+    finalData.cast = JSON.stringify(finalCast);
+    if (writers.length) {
+      const finalWriters = writers.map((writer) => writer._id);
+      finalData.writers = JSON.stringify(finalWriters);
+    }
+
+    if (director) {
+      finalData.director = director._id;
+    }
+    if (initialState?.poster?.url === selectedPoster) {
+      finalData.poster = JSON.stringify(movieInfo.poster);
+    }
+    const formData = new FormData();
+    for (let key in finalData) {
+      formData.append(key, finalData[key]);
+    }
+    onSubmit(formData);
   };
 
   const removeWriterHandler = (writerId) => {
@@ -180,6 +209,18 @@ const MovieForm = ({ onSubmit, busy }) => {
     });
     if (cast.length === 1) return setShowCastModal(false);
   };
+
+  useEffect(() => {
+    if (initialState) {
+      setMovieInfo({
+        ...initialState,
+        releaseDate: initialState.releaseDate.split("T")[0],
+      });
+      setSelectedPoster(initialState.poster.url);
+    }
+  }, [initialState]);
+
+  console.log(movieInfo);
 
   return (
     <>
@@ -218,7 +259,11 @@ const MovieForm = ({ onSubmit, busy }) => {
           </div>
           <div>
             <InputLabel htmlFor="tags">Tags</InputLabel>
-            <TagsInput name="tags" onChange={updateTags} />
+            <TagsInput
+              name="tags"
+              onChange={updateTags}
+              values={movieInfo?.tags}
+            />
           </div>
           <div>
             <InputLabel htmlFor="director">Director</InputLabel>
@@ -228,7 +273,7 @@ const MovieForm = ({ onSubmit, busy }) => {
               placeholder="Search profile"
               renderItem={renderItem}
               onSelect={updateDirector}
-              value={directorName}
+              value={movieInfo.director.name}
               onChange={handleProfileChange}
               visible={directorsProfile.length}
             />
@@ -275,10 +320,11 @@ const MovieForm = ({ onSubmit, busy }) => {
             name="releaseDate"
             className={commonClasses + " w-auto border-2 rounded p-1"}
             onChange={handleChange}
+            value={movieInfo.releaseDate}
           />
           <Submit
             busy={busy}
-            value="Upload"
+            value={btnTitle}
             type="button"
             onClick={handleSubmit}
           />
@@ -292,6 +338,7 @@ const MovieForm = ({ onSubmit, busy }) => {
           />
           <div className="xs:flex flex-col space-y-4">
             <GenresSelector
+            
               badge={genres.length}
               onClick={() => setShowGenresModal(true)}
             />

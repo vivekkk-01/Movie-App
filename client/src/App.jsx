@@ -17,6 +17,7 @@ import Dashboard from "./pages/admin/Dashboard";
 import Actors from "./pages/admin/Actors";
 import Movies from "./pages/admin/Movies";
 import AdminRoot from "./pages/admin/AdminRoot";
+import SearchMovie from "./pages/admin/SearchMovie";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,7 @@ const router = createBrowserRouter([
       { index: true, element: <Dashboard /> },
       { path: "actors", element: <Actors /> },
       { path: "movies", element: <Movies /> },
+      { path: "search", element: <SearchMovie /> },
     ],
   },
   {

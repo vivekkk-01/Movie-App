@@ -49,3 +49,63 @@ export const getMovies = async (pageNo, limit) => {
         return { type: "error", response: err };
     }
 }
+
+export const getMovieData = async (movieId) => {
+    const token = localStorage.getItem("auth-token")
+    try {
+        const { data } = await client.get(`/movies/movie-data/${movieId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+        })
+        return { type: "success", response: data };
+    } catch (error) {
+        const err = error?.response?.data ? error?.response?.data : error?.message ? error?.message : error?.data ? error?.data : "Something went wrong, please try again"
+        return { type: "error", response: err };
+    }
+}
+
+export const updateMovie = async (movieId, formData) => {
+    const token = localStorage.getItem("auth-token")
+    try {
+        const { data } = await client.patch(`/movies/${movieId}`, formData, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+        })
+        return { type: "success", response: data };
+    } catch (error) {
+        const err = error?.response?.data ? error?.response?.data : error?.message ? error?.message : error?.data ? error?.data : "Something went wrong, please try again"
+        return { type: "error", response: err };
+    }
+}
+
+export const deleteMovie = async (movieId) => {
+    const token = localStorage.getItem("auth-token")
+    try {
+        const { data } = await client.delete(`/movies/${movieId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+        })
+        return { type: "success", response: data };
+    } catch (error) {
+        const err = error?.response?.data ? error?.response?.data : error?.message ? error?.message : error?.data ? error?.data : "Something went wrong, please try again"
+        return { type: "error", response: err };
+    }
+}
+
+export const searchMovieForAdmin = async (title) => {
+    const token = localStorage.getItem("auth-token")
+    try {
+        const { data } = await client.get(`/movies/search?title=${title}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+        })
+        return { type: "success", response: data };
+    } catch (error) {
+        const err = error?.response?.data ? error?.response?.data : error?.message ? error?.message : error?.data ? error?.data : "Something went wrong, please try again"
+        return { type: "error", response: err };
+    }
+}

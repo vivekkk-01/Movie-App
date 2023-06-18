@@ -19,6 +19,11 @@ export default function LiveSearch({
 }) {
   const [displaySearch, setDisplaySearch] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
+  const [defaultValue, setDefaultValue] = useState(value);
+
+  useEffect(() => {
+    setDefaultValue(value);
+  }, [value]);
 
   const handleOnFocus = () => {
     if (results.length) setDisplaySearch(true);
@@ -67,6 +72,7 @@ export default function LiveSearch({
   };
 
   const handleChange = (e) => {
+    setDefaultValue(e.target.value);
     onChange(e);
   };
 
@@ -92,7 +98,7 @@ export default function LiveSearch({
         className={getInputStyle()}
         placeholder={placeholder}
         onFocus={handleOnFocus}
-        value={value}
+        value={defaultValue}
         onChange={handleChange}
       />
       <SearchResults

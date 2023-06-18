@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 
-const TagsInput = ({ onChange, name }) => {
+const TagsInput = ({ onChange, name, values }) => {
   const [tags, setTags] = useState([]);
   const [tag, setTag] = useState("");
   const scrollRef = useRef();
@@ -55,10 +55,14 @@ const TagsInput = ({ onChange, name }) => {
   }, [tag]);
 
   useEffect(() => {
-    if (tags.length) {
+    if (tags.length !== values.length) {
       onChange(tags);
     }
   }, [tags]);
+
+  useEffect(() => {
+    if (values?.length) setTags([...values]);
+  }, [values]);
 
   return (
     <div

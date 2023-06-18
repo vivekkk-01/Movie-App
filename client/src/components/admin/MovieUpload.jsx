@@ -32,34 +32,10 @@ const MovieUpload = ({ visible, onClose }) => {
     if (!trailerInfo.url || !trailerInfo.public_id)
       return updateNotification("error", "Movie Trailer is missing!");
     setBusy(true);
-    const { tags, genres, cast, writers, director } = data;
-    const finalData = { ...data };
-    finalData.trailer = JSON.stringify(trailerInfo);
-    finalData.tags = JSON.stringify(tags);
-    finalData.genres = JSON.stringify(genres);
 
-    const finalCast = cast.map((e) => {
-      return {
-        actor: e.profile._id,
-        leadActor: e.leadActor,
-        roleAs: e.roleAs,
-      };
-    });
+    data.append("trailer", JSON.stringify(trailerInfo));
 
-    finalData.cast = JSON.stringify(finalCast);
-    if (writers.length) {
-      const finalWriters = writers.map((writer) => writer._id);
-      finalData.writers = JSON.stringify(finalWriters);
-    }
-
-    if (director) {
-      finalData.director = director._id;
-    }
-    const formData = new FormData();
-    for (let key in finalData) {
-      formData.append(key, finalData[key]);
-    }
-    const { type, response } = await createMovie(formData);
+    const { type, response } = await createMovie(data);
     setBusy(false);
     if (type === "error") return updateNotification(type, response);
     onClose();
@@ -90,7 +66,7 @@ const MovieUpload = ({ visible, onClose }) => {
           visible={!videoSelected}
         />
       ) : (
-        <MovieForm onSubmit={handleSubmit} busy={busy} />
+        <MovieForm onSubmit={handleSubmit} busy={busy} btnTitle="Upload" />
       )}
     </ModalContainer>
   );
