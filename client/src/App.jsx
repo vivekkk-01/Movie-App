@@ -18,12 +18,16 @@ import Actors from "./pages/admin/Actors";
 import Movies from "./pages/admin/Movies";
 import AdminRoot from "./pages/admin/AdminRoot";
 import SearchMovie from "./pages/admin/SearchMovie";
+import SingleMedia from "./pages/user/SingleMedia";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
-    children: [{ index: true, element: <Home /> }],
+    children: [
+      { index: true, element: <Home /> },
+      { path: "media/:mediaId", element: <SingleMedia /> },
+    ],
   },
   {
     path: "/admin",

@@ -109,3 +109,15 @@ export const searchMovieForAdmin = async (title) => {
         return { type: "error", response: err };
     }
 }
+
+export const getTopRatedMovies = async (type) => {
+    let endpoint = "/movies/top-rated"
+    if (type) endpoint += `?type=${type}`
+    try {
+        const { data } = await client.get(endpoint)
+        return { type: "success", response: data };
+    } catch (error) {
+        const err = error?.response?.data ? error?.response?.data : error?.message ? error?.message : error?.data ? error?.data : "Something went wrong, please try again"
+        return { type: "error", response: err };
+    }
+}
