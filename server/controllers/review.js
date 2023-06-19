@@ -22,7 +22,6 @@ exports.postReview = async (req, res) => {
         await movie.save()
         return res.status(201).json("You have successfully added your review.")
     } catch (error) {
-        console.log(error)
         return res.status(error.http_code ? error.http_code : 500).json(error.message ? error.message : "Something went wrong, please try again!")
     }
 }

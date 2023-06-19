@@ -91,4 +91,14 @@ routes.get("/", isAuth, isAdmin, movieControllers.getMovies)
 
 routes.get("/search", isAuth, isAdmin, movieControllers.searchMovies)
 
+// For Normal Users
+
+routes.get("/latest-uploads", movieControllers.getLatestUploads)
+
+routes.get("/single/:movieId", movieControllers.getSingleMovie)
+
+routes.get("/related/:movieId", movieControllers.getRelatedMovies)
+
+routes.get("/top-rated", movieControllers.getTopRatedMovies)
+
 module.exports = routes;

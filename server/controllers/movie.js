@@ -3,6 +3,7 @@ const { unlink } = require("fs")
 const { isValidObjectId } = require("mongoose")
 const path = require('path')
 const Movie = require("../models/Movie")
+const Review = require("../models/Review")
 const { validationResult } = require("express-validator")
 
 exports.uploadTrailer = async (req, res) => {
@@ -201,6 +202,250 @@ exports.searchMovies = async (req, res) => {
                 genres: movie.genres
             }
         }))
+    } catch (error) {
+        return res.status(error.http_code ? error.http_code : 500).json(error.message ? error.message : "Something went wrong, please try again!")
+    }
+}
+
+exports.getLatestUploads = async (req, res) => {
+    try {
+        const { limit = 5 } = req.query;
+        const movies = await Movie.find({ status: "public" }).sort({ createdAt: -1 }).limit(+limit)
+        const result = movies.map(m => {
+            return {
+                id: m._id,
+                title: m.title,
+                storyLine: m.storyLine,
+                poster: m.poster?.url,
+                trailer: m.trailer?.url,
+            }
+        })
+        return res.json(result)
+    } catch (error) {
+        return res.status(error.http_code ? error.http_code : 500).json(error.message ? error.message : "Something went wrong, please try again!")
+    }
+}
+
+exports.getSingleMovie = async (req, res) => {
+    try {
+        const { movieId } = req.params;
+        const movie = await Movie.findById(movieId).populate("writers director cast.actor")
+        if (!movie) return res.status(404).json("Movie Not Found!")
+
+        const response = await Review.aggregate([
+            {
+                $lookup: {
+                    from: "Review",
+                    localField: "rating",
+                    foreignField: "_id",
+                    as: "avgRating"
+                },
+            },
+            {
+                $match: {
+                    movie: movie._id
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    ratingAvg: {
+                        $avg: "$rating"
+                    },
+                    reviewCount: {
+                        $sum: 1
+                    }
+                }
+            }
+        ])
+
+        let reviews = {}
+
+        if (response.length > 0) {
+            reviews.ratingAvg = response[0].ratingAvg.toFixed(1)
+            reviews.reviewCount = response[0].reviewCount
+        }
+
+        const { _id: id, title, storyLine, writers, director, cast, releaseDate, genres, tags, language, poster, trailer, type, } = movie;
+        return res.json({
+            id, title, storyLine, writers: writers.map(w => {
+                return {
+                    id: w._id,
+                    name: w.name,
+                }
+            }),
+            director: { id: director._id, name: director.name },
+            cast: cast.map(c => {
+                return {
+                    id: c._id,
+                    profile: {
+                        id: c.actor.id,
+                        name: c.actor.name,
+                        avatar: c.actor.avatar?.url,
+                    },
+                    leadActor: c.leadActor,
+                    roleAs: c.roleAs,
+                }
+            }), releaseDate, genres, tags, language, poster: poster?.url, trailer: trailer?.url, type, reviews
+        })
+    } catch (error) {
+        return res.status(error.http_code ? error.http_code : 500).json(error.message ? error.message : "Something went wrong, please try again!")
+    }
+}
+
+exports.getRelatedMovies = async (req, res) => {
+    try {
+        const { movieId } = req.params;
+        const movie = await Movie.findById(movieId)
+        if (!movie) return res.status(404).json("Movie not found!")
+        const movies = await Movie.aggregate([
+            {
+                $lookup: {
+                    from: "Movie",
+                    foreignField: "_id",
+                    localField: "tags",
+                    as: "relatedMovie"
+                }
+            },
+            {
+                $match: {
+                    tags: { $in: [...movie.tags] },
+                    _id: { $ne: movie._id }
+                }
+            },
+            {
+                $project: {
+                    title: 1,
+                    poster: "$poster.url"
+                }
+            },
+            {
+                $limit: 5
+            }
+        ])
+
+        const result = await Promise.all(movies.map(async m => {
+            const response = await Review.aggregate([
+                {
+                    $lookup: {
+                        from: "Review",
+                        localField: "rating",
+                        foreignField: "_id",
+                        as: "avgRating"
+                    },
+                },
+                {
+                    $match: {
+                        movie: m._id
+                    }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        ratingAvg: {
+                            $avg: "$rating"
+                        },
+                        reviewCount: {
+                            $sum: 1
+                        }
+                    }
+                }
+            ])
+
+            let reviews = {}
+
+            if (response.length > 0) {
+                reviews.ratingAvg = response[0].ratingAvg.toFixed(1)
+                reviews.reviewCount = response[0].reviewCount
+            }
+
+            return {
+                ...m,
+                ...reviews
+            }
+        }))
+        return res.json(result)
+    } catch (error) {
+        return res.status(error.http_code ? error.http_code : 500).json(error.message ? error.message : "Something went wrong, please try again!")
+    }
+}
+
+exports.getTopRatedMovies = async (req, res) => {
+    try {
+        const { type = "Film" } = req.query;
+        const movies = await Movie.aggregate([
+            {
+                $lookup: {
+                    from: "Movie",
+                    localField: 'reviews',
+                    foreignField: "_id",
+                    as: "topRated"
+                },
+            },
+            {
+                $match: {
+                    type: { $eq: type },
+                    status: { $eq: "public" },
+                    $expr: { $gt: [{ $size: "$reviews" }, 0] }
+                }
+            },
+            {
+                $project: {
+                    title: 1,
+                    poster: "$poster.url",
+                }
+            },
+            {
+                $sort: {
+                    reviewCount: -1
+                }
+            },
+            {
+                $limit: 5
+            }
+        ]);
+
+        const result = await Promise.all(movies.map(async m => {
+            const response = await Review.aggregate([
+                {
+                    $lookup: {
+                        from: "Review",
+                        localField: "rating",
+                        foreignField: "_id",
+                        as: "avgRating"
+                    },
+                },
+                {
+                    $match: {
+                        movie: m._id
+                    }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        ratingAvg: {
+                            $avg: "$rating"
+                        },
+                        reviewCount: {
+                            $sum: 1
+                        }
+                    }
+                }
+            ])
+
+            let reviews = {}
+
+            if (response.length > 0) {
+                reviews.ratingAvg = response[0].ratingAvg.toFixed(1)
+                reviews.reviewCount = response[0].reviewCount
+            }
+
+            return {
+                ...m,
+                ...reviews
+            }
+        }))
+        return res.json(result)
     } catch (error) {
         return res.status(error.http_code ? error.http_code : 500).json(error.message ? error.message : "Something went wrong, please try again!")
     }
