@@ -10,7 +10,7 @@ export default {
         "dark-subtle": "rgba(255,255,255,.5)",
         "light-subtle": "rgba(39,39,39,.5)",
         "highlight-dark": "#ffc200",
-        highlight: "#d98600"
+        highlight: "#058bfb"
       }
     },
     screens: {

@@ -6,6 +6,7 @@ import TopRatedRatedShortFilms from "../components/user/TopRatedShortFilms";
 import TopRatedRatedFilms from "../components/user/TopRatedFilms";
 import TopRatedRatedTVSeries from "../components/user/TopRatedTVSeries";
 import TopRatedWebSeries from "../components/user/TopRatedWebSeries";
+import HeroSlider from "../components/user/HeroSlider";
 
 const Home = () => {
   const { authInfo } = useAuth();
@@ -41,10 +42,13 @@ const Home = () => {
             </button>
           </p>
         ) : null}
-        <TopRatedRatedFilms />
-        <TopRatedRatedTVSeries />
-        <TopRatedWebSeries />
-        <TopRatedRatedShortFilms />
+        <HeroSlider />
+        <div className="space-y-3 py-5">
+          <TopRatedRatedFilms />
+          <TopRatedRatedTVSeries />
+          <TopRatedWebSeries />
+          <TopRatedRatedShortFilms />
+        </div>
       </Container>
     </div>
   );

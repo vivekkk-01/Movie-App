@@ -121,3 +121,13 @@ export const getTopRatedMovies = async (type) => {
         return { type: "error", response: err };
     }
 }
+
+export const getLatestUploads = async () => {
+    try {
+        const { data } = await client.get("/movies/latest-uploads")
+        return { type: "success", response: data };
+    } catch (error) {
+        const err = error?.response?.data ? error?.response?.data : error?.message ? error?.message : error?.data ? error?.data : "Something went wrong, please try again"
+        return { type: "error", response: err };
+    }
+}
