@@ -220,8 +220,6 @@ const MovieForm = ({ onSubmit, busy, initialState, btnTitle }) => {
     }
   }, [initialState]);
 
-  console.log(movieInfo);
-
   return (
     <>
       <form
@@ -338,7 +336,6 @@ const MovieForm = ({ onSubmit, busy, initialState, btnTitle }) => {
           />
           <div className="xs:flex flex-col space-y-4">
             <GenresSelector
-            
               badge={genres.length}
               onClick={() => setShowGenresModal(true)}
             />

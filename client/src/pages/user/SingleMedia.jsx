@@ -5,10 +5,12 @@ import { useAuth, useNotification } from "../../hooks/index";
 import Container from "../../components/Container";
 import Rating from "../../components/user/Rating";
 import RelatedMovies from "../../components/user/RelatedMovies";
+import AddRatingModal from "../../components/user/AddRatingModal";
 
 const SingleMedia = () => {
   const [media, setMedia] = useState(null);
   const [ready, setReady] = useState(false);
+  const [showRatingModal, setShowRatingModal] = useState(false);
   const { mediaId } = useParams();
   const updateNotification = useNotification();
   const { authInfo } = useAuth();
@@ -29,6 +31,11 @@ const SingleMedia = () => {
     if (!authInfo.isLoggedIn) {
       return navigate("/auth/login");
     }
+    setShowRatingModal(true);
+  };
+
+  const handleReviewsSubmit = (reviews) => {
+    setMedia({ ...media, reviews });
   };
 
   if (!ready)
@@ -54,151 +61,172 @@ const SingleMedia = () => {
     genres,
   } = media;
   return (
-    <div className="dark:bg-primary bg-white min-h-screen pb-10">
-      <Container className="w-4/5 mx-auto xs:w-screen px-4">
-        <video
-          poster={poster}
-          controls
-          src={trailer}
-          className="object-cover"
-        ></video>
-        <div className="flex justify-between items-center">
-          <h1 className="text-4xl text-highlight dark:text-highlight-dark font-semibold py-3">
-            {title}
-          </h1>
-          <div className="flex flex-col items-end">
-            <Link
-              to={`/media/reviews/${mediaId}`}
-              className="text-highlight dark:text-highlight-dark hover:underline"
-            >
-              {!reviews.reviewCount ? null : reviews.reviewCount}{" "}
-              {reviews.reviewCount == 1
-                ? "Review"
-                : !reviews.reviewCount
-                ? null
-                : "Reviews"}
-            </Link>
-            <Rating ratingAvg={reviews.ratingAvg} />
-            <button
-              onClick={handleRate}
-              className="text-highlight dark:text-highlight-dark hover:underline"
-              type="button"
-            >
-              Rate this {type}
-            </button>
+    <>
+      <div className="dark:bg-primary bg-white min-h-screen pb-10">
+        <Container className="w-4/5 mx-auto xs:w-screen px-4">
+          <video
+            poster={poster}
+            controls
+            src={trailer}
+            className="object-cover"
+          ></video>
+          <div className="flex justify-between items-center">
+            <h1 className="text-4xl text-highlight dark:text-highlight-dark font-semibold py-3">
+              {title}
+            </h1>
+            <div className="flex flex-col items-end">
+              <Link
+                to={`/media/reviews/${mediaId}`}
+                className="text-highlight dark:text-highlight-dark hover:underline"
+              >
+                {!reviews.reviewCount ? null : reviews.reviewCount}{" "}
+                {reviews.reviewCount == 1
+                  ? "Review"
+                  : !reviews.reviewCount
+                  ? null
+                  : "Reviews"}
+              </Link>
+              <Rating ratingAvg={reviews.ratingAvg} />
+              <button
+                onClick={handleRate}
+                className="text-highlight dark:text-highlight-dark hover:underline"
+                type="button"
+              >
+                Rate this {type}
+              </button>
+            </div>
           </div>
-        </div>
-        <div className="space-y-3">
-          <p className="text-light-subtle dark:text-dark-subtle">{storyLine}</p>
+          <div className="space-y-3">
+            <p className="text-light-subtle dark:text-dark-subtle">
+              {storyLine}
+            </p>
 
-          <div className="flex space-x-2">
-            <p className="text-light-subtle dark:text-dark-subtle font-semibold">
-              Director:
-            </p>
-            <p className="text-highlight dark:text-highlight-dark hover:underline cursor-pointer">
-              {director?.name}
-            </p>
-          </div>
-
-          <div className="flex">
-            <p className="text-light-subtle dark:text-dark-subtle font-semibold mr-2">
-              Writers:
-            </p>
-            {writers.map((writer) => {
-              return (
-                <div className="flex space-x-2">
-                  <p className="text-highlight dark:text-highlight-dark hover:underline cursor-pointer">
-                    {writer?.name}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="flex">
-            <p className="text-light-subtle dark:text-dark-subtle font-semibold mr-2">
-              Cast:
-            </p>
             <div className="flex space-x-2">
+              <p className="text-light-subtle dark:text-dark-subtle font-semibold">
+                Director:
+              </p>
+              <p className="text-highlight dark:text-highlight-dark hover:underline cursor-pointer">
+                {director?.name}
+              </p>
+            </div>
+
+            <div className="flex">
+              <p className="text-light-subtle dark:text-dark-subtle font-semibold mr-2">
+                Writers:
+              </p>
+              {writers.map((writer) => {
+                return (
+                  <div key={writer.id} className="flex space-x-2">
+                    <p className="text-highlight dark:text-highlight-dark hover:underline cursor-pointer">
+                      {writer?.name}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="flex">
+              <p className="text-light-subtle dark:text-dark-subtle font-semibold mr-2">
+                Cast:
+              </p>
+              <div className="flex space-x-2">
+                {cast.map((c) => {
+                  return (
+                    c.leadActor && (
+                      <p
+                        key={c.profile.id}
+                        className="text-highlight dark:text-highlight-dark hover:underline cursor-pointer"
+                      >
+                        {c?.profile.name}
+                      </p>
+                    )
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="flex space-x-2">
+              <p className="text-light-subtle dark:text-dark-subtle font-semibold">
+                Language:
+              </p>
+              <p className="text-highlight dark:text-highlight-dark">
+                {language}
+              </p>
+            </div>
+
+            <div className="flex space-x-2">
+              <p className="text-light-subtle dark:text-dark-subtle font-semibold">
+                Release Date:
+              </p>
+              <p className="text-highlight dark:text-highlight-dark">
+                {releaseDate.split("T")[0]}
+              </p>
+            </div>
+
+            <div className="flex">
+              <p className="text-light-subtle dark:text-dark-subtle font-semibold mr-2">
+                Genres:
+              </p>
+              <div className="flex space-x-2">
+                {genres.map((g) => {
+                  return (
+                    <p
+                      key={g}
+                      className="text-highlight dark:text-highlight-dark"
+                    >
+                      {g}
+                    </p>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="flex space-x-2">
+              <p className="text-light-subtle dark:text-dark-subtle font-semibold">
+                Type:
+              </p>
+              <p className="text-highlight dark:text-highlight-dark">{type}</p>
+            </div>
+          </div>
+
+          <div className="mt-5">
+            <h1 className="text-light-subtle dark:text-dark-subtle font-semibold text-2xl mb-2">
+              Cast:
+            </h1>
+            <div className="grid grid-cols-10">
               {cast.map((c) => {
                 return (
-                  c.leadActor && (
+                  <div
+                    key={c.profile.id}
+                    className="flex flex-col items-center"
+                  >
+                    <img
+                      src={c.profile.avatar}
+                      className="h-24 w-24 aspect-square object-cover rounded-full"
+                    />
                     <p className="text-highlight dark:text-highlight-dark hover:underline cursor-pointer">
-                      {c?.profile.name}
+                      {c.profile.name}
                     </p>
-                  )
+                    <p className="text-light-subtle dark:text-dark-subtle">
+                      {c.roleAs}
+                    </p>
+                  </div>
                 );
               })}
             </div>
           </div>
-
-          <div className="flex space-x-2">
-            <p className="text-light-subtle dark:text-dark-subtle font-semibold">
-              Language:
-            </p>
-            <p className="text-highlight dark:text-highlight-dark">
-              {language}
-            </p>
+          <div className="mt-3">
+            <RelatedMovies mediaId={mediaId} type={type} />
           </div>
-
-          <div className="flex space-x-2">
-            <p className="text-light-subtle dark:text-dark-subtle font-semibold">
-              Release Date:
-            </p>
-            <p className="text-highlight dark:text-highlight-dark">
-              {releaseDate.split("T")[0]}
-            </p>
-          </div>
-
-          <div className="flex">
-            <p className="text-light-subtle dark:text-dark-subtle font-semibold mr-2">
-              Genres:
-            </p>
-            <div className="flex space-x-2">
-              {genres.map((g) => {
-                return (
-                  <p className="text-highlight dark:text-highlight-dark">{g}</p>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="flex space-x-2">
-            <p className="text-light-subtle dark:text-dark-subtle font-semibold">
-              Type:
-            </p>
-            <p className="text-highlight dark:text-highlight-dark">{type}</p>
-          </div>
-        </div>
-
-        <div className="mt-5">
-          <h1 className="text-light-subtle dark:text-dark-subtle font-semibold text-2xl mb-2">
-            Cast:
-          </h1>
-          <div className="grid grid-cols-10">
-            {cast.map((c) => {
-              return (
-                <div key={c.profile.id} className="flex flex-col items-center">
-                  <img
-                    src={c.profile.avatar}
-                    className="h-24 w-24 aspect-square object-cover rounded-full"
-                  />
-                  <p className="text-highlight dark:text-highlight-dark hover:underline cursor-pointer">
-                    {c.profile.name}
-                  </p>
-                  <p className="text-light-subtle dark:text-dark-subtle">
-                    {c.roleAs}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-        <div className="mt-3">
-          <RelatedMovies mediaId={mediaId} type={type} />
-        </div>
-      </Container>
-    </div>
+        </Container>
+      </div>
+      <AddRatingModal
+        visible={showRatingModal}
+        onClose={() => setShowRatingModal(false)}
+        mediaId={mediaId}
+        onSubmit={handleReviewsSubmit}
+      />
+    </>
   );
 };
 

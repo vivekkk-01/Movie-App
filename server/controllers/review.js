@@ -1,8 +1,13 @@
 const Movie = require("../models/Movie");
 const Review = require("../models/Review");
+const { validationResult } = require("express-validator")
 
 exports.postReview = async (req, res) => {
     try {
+        const error = validationResult(req)
+        if (!error.isEmpty()) {
+            return res.status(403).json(err.array()[0].msg)
+        }
         const { movieId } = req.params;
         const { content, rating } = req.body;
         const userId = req.user._id
@@ -20,7 +25,40 @@ exports.postReview = async (req, res) => {
         })
         movie.reviews.push(newReview)
         await movie.save()
-        return res.status(201).json("You have successfully added your review.")
+        const response = await Review.aggregate([
+            {
+                $lookup: {
+                    from: "Review",
+                    localField: "rating",
+                    foreignField: "_id",
+                    as: "avgRating"
+                },
+            },
+            {
+                $match: {
+                    movie: movie._id
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    ratingAvg: {
+                        $avg: "$rating"
+                    },
+                    reviewCount: {
+                        $sum: 1
+                    }
+                }
+            }
+        ])
+
+        let reviews = {}
+
+        if (response.length > 0) {
+            reviews.ratingAvg = response[0].ratingAvg.toFixed(1)
+            reviews.reviewCount = response[0].reviewCount
+        }
+        return res.status(201).json({ message: "You have successfully added your review.", reviews })
     } catch (error) {
         return res.status(error.http_code ? error.http_code : 500).json(error.message ? error.message : "Something went wrong, please try again!")
     }
@@ -28,6 +66,10 @@ exports.postReview = async (req, res) => {
 
 exports.updateReview = async (req, res) => {
     try {
+        const error = validationResult(req)
+        if (!error.isEmpty()) {
+            return res.status(403).json(err.array()[0].msg)
+        }
         const { reviewId } = req.params;
         const { content, rating } = req.body;
         const userId = req.user._id
