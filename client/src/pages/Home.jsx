@@ -30,18 +30,18 @@ const Home = () => {
 
   return (
     <div className="dark:bg-primary bg-white min-h-screen">
-      <Container>
-        {isLoggedIn && !isVerified ? (
-          <p className="text-lg text-center bg-blue-50 p-2">
-            It looks like you haven't verified account,{" "}
-            <button
-              onClick={handleVerification}
-              className="text-blue-500 font-semibold hover:underline"
-            >
-              click here to verify your account.
-            </button>
-          </p>
-        ) : null}
+      {isLoggedIn && !isVerified ? (
+        <p className="w-screen text-lg text-center bg-blue-50 p-2">
+          It looks like you haven't verified account,{" "}
+          <button
+            onClick={handleVerification}
+            className="text-blue-500 font-semibold hover:underline"
+          >
+            click here to verify your account.
+          </button>
+        </p>
+      ) : null}
+      <Container className="w-4/5 xs:w-screen">
         <HeroSlider />
         <div className="space-y-3 py-5">
           <TopRatedRatedFilms />

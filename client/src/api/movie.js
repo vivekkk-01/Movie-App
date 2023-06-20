@@ -131,3 +131,23 @@ export const getLatestUploads = async () => {
         return { type: "error", response: err };
     }
 }
+
+export const getSingleMedia = async (movieId) => {
+    try {
+        const { data } = await client.get("/movies/single/" + movieId)
+        return { type: "success", response: data };
+    } catch (error) {
+        const err = error?.response?.data ? error?.response?.data : error?.message ? error?.message : error?.data ? error?.data : "Something went wrong, please try again"
+        return { type: "error", response: err };
+    }
+}
+
+export const getRelatedMedia = async (movieId) => {
+    try {
+        const { data } = await client.get("/movies/related/" + movieId)
+        return { type: "success", response: data };
+    } catch (error) {
+        const err = error?.response?.data ? error?.response?.data : error?.message ? error?.message : error?.data ? error?.data : "Something went wrong, please try again"
+        return { type: "error", response: err };
+    }
+}
