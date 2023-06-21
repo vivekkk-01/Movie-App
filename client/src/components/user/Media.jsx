@@ -2,6 +2,7 @@ import React from "react";
 import GridContainer from "../GridContainer";
 import { Link } from "react-router-dom";
 import Rating from "./Rating";
+import { getPoster } from "../../utils/helper";
 
 const trimTitle = (text = "") => {
   if (text.length <= 20) return text;
@@ -27,10 +28,14 @@ const MediaList = ({ movies = [], title }) => {
 export default MediaList;
 
 const ListItem = ({ movie }) => {
-  const { _id, poster, title, ratingAvg } = movie;
+  const { _id, poster, title, ratingAvg, responsivePosters } = movie;
   return (
     <Link to={`/media/${_id}`}>
-      <img src={poster} alt={title} className="aspect-video object-cover" />
+      <img
+        src={getPoster(responsivePosters) || poster}
+        alt={title}
+        className="aspect-video object-cover"
+      />
       <h1
         title={title}
         className="text-lg dark:text-white text-primary font-semibold"

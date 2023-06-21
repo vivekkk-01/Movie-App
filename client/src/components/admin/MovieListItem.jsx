@@ -1,4 +1,5 @@
 import { BsBoxArrowUpRight, BsPencilSquare, BsTrash } from "react-icons/bs";
+import { getPoster } from "../../utils/helper";
 
 const MovieListItem = ({ movie, onDelete, onEdit, onOpen }) => {
   const { poster, genres, title, status } = movie;
@@ -8,7 +9,11 @@ const MovieListItem = ({ movie, onDelete, onEdit, onOpen }) => {
         <tr className="tab:flex tab:flex-col tab:items-center tab:justify-center  pb-2">
           <td className="tab:w-full">
             <div className="w-24 tab:w-full">
-              <img className="w-full aspect-video" src={poster.url} alt="" />
+              <img
+                className="w-full aspect-video"
+                src={getPoster(poster.responsive) || poster.url}
+                alt=""
+              />
             </div>
           </td>
 

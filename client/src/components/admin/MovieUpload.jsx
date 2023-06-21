@@ -28,6 +28,13 @@ const MovieUpload = ({ visible, onClose }) => {
     updateNotification("error", error);
   };
 
+  const resetState = () => {
+    setVideoSelected(false);
+    setVideoUploaded(false);
+    setTrailerInfo({});
+    setProgress(0);
+  };
+
   const handleSubmit = async (data) => {
     if (!trailerInfo.url || !trailerInfo.public_id)
       return updateNotification("error", "Movie Trailer is missing!");
@@ -38,6 +45,8 @@ const MovieUpload = ({ visible, onClose }) => {
     const { type, response } = await createMovie(data);
     setBusy(false);
     if (type === "error") return updateNotification(type, response);
+    updateNotification("success", "Movie Uploaded Successfully!");
+    resetState();
     onClose();
   };
 

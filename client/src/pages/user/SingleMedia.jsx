@@ -6,11 +6,14 @@ import Container from "../../components/Container";
 import Rating from "../../components/user/Rating";
 import RelatedMovies from "../../components/user/RelatedMovies";
 import AddRatingModal from "../../components/user/AddRatingModal";
+import ProfileModal from "../../components/modals/ProfileModal";
 
 const SingleMedia = () => {
   const [media, setMedia] = useState(null);
   const [ready, setReady] = useState(false);
   const [showRatingModal, setShowRatingModal] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
+  const [selectedProfileId, setSelectedProfileId] = useState(null);
   const { mediaId } = useParams();
   const updateNotification = useNotification();
   const { authInfo } = useAuth();
@@ -36,6 +39,11 @@ const SingleMedia = () => {
 
   const handleReviewsSubmit = (reviews) => {
     setMedia({ ...media, reviews });
+  };
+
+  const handleProfileClick = (profileId) => {
+    setSelectedProfileId(profileId);
+    setShowProfile(true);
   };
 
   if (!ready)
@@ -105,7 +113,10 @@ const SingleMedia = () => {
               <p className="text-light-subtle dark:text-dark-subtle font-semibold">
                 Director:
               </p>
-              <p className="text-highlight dark:text-highlight-dark hover:underline cursor-pointer">
+              <p
+                onClick={handleProfileClick.bind(null, director.id)}
+                className="text-highlight dark:text-highlight-dark hover:underline cursor-pointer"
+              >
                 {director?.name}
               </p>
             </div>
@@ -116,7 +127,11 @@ const SingleMedia = () => {
               </p>
               {writers.map((writer) => {
                 return (
-                  <div key={writer.id} className="flex space-x-2">
+                  <div
+                    onClick={handleProfileClick.bind(null, writer.id)}
+                    key={writer.id}
+                    className="flex space-x-2"
+                  >
                     <p className="text-highlight dark:text-highlight-dark hover:underline cursor-pointer">
                       {writer?.name}
                     </p>
@@ -134,6 +149,7 @@ const SingleMedia = () => {
                   return (
                     c.leadActor && (
                       <p
+                        onClick={handleProfileClick.bind(null, c.profile.id)}
                         key={c.profile.id}
                         className="text-highlight dark:text-highlight-dark hover:underline cursor-pointer"
                       >
@@ -197,6 +213,7 @@ const SingleMedia = () => {
               {cast.map((c) => {
                 return (
                   <div
+                    onClick={handleProfileClick.bind(null, c.profile.id)}
                     key={c.profile.id}
                     className="flex flex-col items-center"
                   >
@@ -204,12 +221,14 @@ const SingleMedia = () => {
                       src={c.profile.avatar}
                       className="h-24 w-24 aspect-square object-cover rounded-full"
                     />
-                    <p className="text-highlight dark:text-highlight-dark hover:underline cursor-pointer">
-                      {c.profile.name}
-                    </p>
-                    <p className="text-light-subtle dark:text-dark-subtle">
-                      {c.roleAs}
-                    </p>
+                    <div className="flex flex-col items-center">
+                      <p className="text-highlight dark:text-highlight-dark hover:underline cursor-pointer">
+                        {c.profile.name}
+                      </p>
+                      <p className="text-light-subtle dark:text-dark-subtle">
+                        {c.roleAs}
+                      </p>
+                    </div>
                   </div>
                 );
               })}
@@ -225,6 +244,11 @@ const SingleMedia = () => {
         onClose={() => setShowRatingModal(false)}
         mediaId={mediaId}
         onSubmit={handleReviewsSubmit}
+      />
+      <ProfileModal
+        profileId={selectedProfileId}
+        visible={showProfile}
+        onClose={() => setShowProfile(false)}
       />
     </>
   );

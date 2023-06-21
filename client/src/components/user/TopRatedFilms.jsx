@@ -7,14 +7,20 @@ const TopRatedRatedFilms = () => {
   const [movies, setMovies] = useState([]);
   const updateNotification = useNotification();
 
-  const fetchMovies = async () => {
-    const { type, response } = await getTopRatedMovies("Film");
+  const fetchMovies = async (signal) => {
+    const { type, response } = await getTopRatedMovies("Film", signal);
     if (type === "error") return updateNotification(type, response);
     setMovies([...response]);
   };
 
   useEffect(() => {
-    fetchMovies();
+    const ac = new AbortController();
+
+    fetchMovies(ac.signal);
+
+    return () => {
+      ac.abort();
+    };
   }, []);
 
   return <MediaList movies={movies} title="Viewers' choice (Films)" />;

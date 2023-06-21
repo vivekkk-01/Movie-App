@@ -17,8 +17,8 @@ const HeroSlider = () => {
   const clonedSlideRef = useRef();
   const navigate = useNavigate();
 
-  const fetchMovies = async () => {
-    const { type, response } = await getLatestUploads();
+  const fetchMovies = async (signal) => {
+    const { type, response } = await getLatestUploads(signal);
     if (type === "error") return updateNotification(type, response);
 
     setSlides([...response]);
@@ -96,11 +96,13 @@ const HeroSlider = () => {
   }, []);
 
   useEffect(() => {
-    fetchMovies();
+    const ac = new AbortController();
+    fetchMovies(ac.signal);
     document.addEventListener("visibilitychange", handleVisibility);
     return () => {
       pauseSlideShow();
       document.removeEventListener("visibilitychange", handleVisibility);
+      ac.abort();
     };
   }, []);
 
@@ -124,7 +126,7 @@ const HeroSlider = () => {
             alt=""
             className="aspect-video object-cover cursor-pointer"
           />
-          <div className="absolute inset-0 flex flex-col justify-end p-3 bg-gradient-to-t from-gray-200 dark:from-primary">
+          <div className="absolute inset-0 flex flex-col justify-end p-3 bg-gradient-to-t from-gray-200 via-transparent dark:from-primary dark:via-transparent">
             <h1 className="font-semibold text-4xl dark:text-highlight-dark text-highlight">
               {slide.title}
             </h1>

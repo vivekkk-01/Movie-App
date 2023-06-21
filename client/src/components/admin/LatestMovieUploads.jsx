@@ -13,14 +13,19 @@ const LatestMovieUploads = () => {
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [busy, setBusy] = useState(false);
 
-  const fetchMovies = async (pageNo, limit) => {
-    const { type, response } = await getMovies(pageNo, limit);
+  const fetchMovies = async (pageNo, limit, signal) => {
+    const { type, response } = await getMovies(pageNo, limit, signal);
     if (type === "error") return updateNotification(type, response);
     setMovies([...response]);
   };
 
   useEffect(() => {
-    fetchMovies(0, 5);
+    const ac = new AbortController();
+    fetchMovies(0, 5, ac.signal);
+
+    return () => {
+      ac.abort();
+    };
   }, []);
 
   const editMovieHandler = async (movie) => {

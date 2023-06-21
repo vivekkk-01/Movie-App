@@ -216,6 +216,7 @@ exports.getLatestUploads = async (req, res) => {
                 id: m._id,
                 title: m.title,
                 storyLine: m.storyLine,
+                responsivePosters: m.poster.responsive,
                 poster: m.poster?.url,
                 trailer: m.trailer?.url,
             }
@@ -316,7 +317,8 @@ exports.getRelatedMovies = async (req, res) => {
             {
                 $project: {
                     title: 1,
-                    poster: "$poster.url"
+                    poster: "$poster.url",
+                    responsivePosters: "$poster.responsive"
                 }
             },
             {
@@ -393,6 +395,7 @@ exports.getTopRatedMovies = async (req, res) => {
                 $project: {
                     title: 1,
                     poster: "$poster.url",
+                    responsivePosters: "$poster.responsive"
                 }
             },
             {
