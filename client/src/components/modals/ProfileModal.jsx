@@ -17,7 +17,6 @@ const ProfileModal = ({ visible, onClose, profileId }) => {
     if (profileId) fetchProfile();
   }, [profileId]);
 
-  console.log(profile);
   return (
     <ModalContainer visible={visible} onClose={onClose} ignoreContainer={true}>
       <div className="w-72 bg-white dark:bg-primary p-5 rounded flex flex-col items-center space-y-3">

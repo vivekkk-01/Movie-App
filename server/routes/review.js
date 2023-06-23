@@ -10,6 +10,6 @@ routes.put("/:reviewId", auth.isAuth, body("rating").isFloat({ min: 0, max: 10 }
 
 routes.delete("/:reviewId", auth.isAuth, reviewControllers.deleteReview)
 
-routes.get("/get-reviews-by-movie/:movieId", auth.isAuth, reviewControllers.getReviews)
+routes.get("/get-reviews-by-movie/:movieId", reviewControllers.getReviews)
 
 module.exports = routes;

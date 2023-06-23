@@ -85,6 +85,7 @@ const SingleMedia = () => {
             <div className="flex flex-col items-end">
               <Link
                 to={`/media/reviews/${mediaId}`}
+                state={{ title }}
                 className="text-highlight dark:text-highlight-dark hover:underline"
               >
                 {!reviews.reviewCount ? null : reviews.reviewCount}{" "}
