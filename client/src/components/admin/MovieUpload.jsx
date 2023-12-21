@@ -37,7 +37,7 @@ const MovieUpload = ({ visible, onClose }) => {
 
   const handleSubmit = async (data) => {
     if (!trailerInfo.url || !trailerInfo.public_id)
-      return updateNotification("error", "Movie Trailer is missing!");
+      return updateNotification("error", "Uploading Trailer. Wait for some time!");
     setBusy(true);
 
     data.append("trailer", JSON.stringify(trailerInfo));
