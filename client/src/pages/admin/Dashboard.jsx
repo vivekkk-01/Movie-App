@@ -1,14 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import MovieUpload from "../../components/admin/MovieUpload";
 import LatestMovieUploads from "../../components/admin/LatestMovieUploads";
+import { getAppInfo } from "../../api/admin";
+import { useNotification } from "../../hooks";
 
 const Dashboard = () => {
+  const [appInfo, setAppInfo] = useState({
+    movieCount: 0,
+    reviewCount: 0,
+    userCount: 0,
+  });
+
+  const updateNotification = useNotification();
+
+  useEffect(() => {
+    (async () => {
+      const { type, response } = await getAppInfo();
+      if (type === "error") return updateNotification(type, response);
+      setAppInfo({ ...response });
+    })();
+  }, []);
+
   return (
     <>
       <div className="grid grid-cols-3 xs:grid-cols-1 xs:grid-rows-3 gap-5 my-5">
-        <AppInfoBox title="Total Uploads" subTitle={100} />
-        <AppInfoBox title="Total Reviews" subTitle={"1,500"} />
-        <AppInfoBox title="Total Users" subTitle={200} />
+        <AppInfoBox
+          title="Total Uploads"
+          subTitle={appInfo.movieCount.toLocaleString()}
+        />
+        <AppInfoBox
+          title="Total Reviews"
+          subTitle={appInfo.reviewCount.toLocaleString()}
+        />
+        <AppInfoBox
+          title="Total Users"
+          subTitle={appInfo.userCount.toLocaleString()}
+        />
         <LatestMovieUploads />
       </div>
     </>
