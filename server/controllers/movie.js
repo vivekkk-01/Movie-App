@@ -203,7 +203,7 @@ exports.deleteMovie = async (req, res) => {
         resource_type: "video",
       });
     }
-    
+
     await Movie.findByIdAndDelete(movieId);
     return res.json("Movie Deleted Successfully!");
   } catch (error) {
@@ -598,6 +598,69 @@ exports.getTopRatedMovies = async (req, res) => {
       })
     );
     return res.json(result);
+  } catch (error) {
+    return res
+      .status(error.http_code ? error.http_code : 500)
+      .json(
+        error.message
+          ? error.message
+          : "Something went wrong, please try again!"
+      );
+  }
+};
+
+exports.searchPublicMovies = async (req, res) => {
+  try {
+    const { title } = req.query;
+    if (!title) return;
+    const movies = await Movie.find({
+      title: { $regex: title, $options: "i" },
+      status: "public",
+    });
+
+    const result = await Promise.all(
+      movies.map(async (m) => {
+        const response = await Review.aggregate([
+          {
+            $lookup: {
+              from: "Review",
+              localField: "rating",
+              foreignField: "_id",
+              as: "avgRating",
+            },
+          },
+          {
+            $match: {
+              movie: m._id,
+            },
+          },
+          {
+            $group: {
+              _id: null,
+              ratingAvg: {
+                $avg: "$rating",
+              },
+              reviewCount: {
+                $sum: 1,
+              },
+            },
+          },
+        ]);
+
+        let reviews = {};
+
+        if (response.length > 0) {
+          reviews.ratingAvg = response[0].ratingAvg.toFixed(1);
+          reviews.reviewCount = response[0].reviewCount;
+        }
+
+        return {
+          ...m,
+          ...reviews,
+        };
+      })
+    );
+    return res.json({ ...result["0"]._doc });
   } catch (error) {
     return res
       .status(error.http_code ? error.http_code : 500)
