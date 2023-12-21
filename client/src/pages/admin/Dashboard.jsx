@@ -3,6 +3,7 @@ import MovieUpload from "../../components/admin/MovieUpload";
 import LatestMovieUploads from "../../components/admin/LatestMovieUploads";
 import { getAppInfo } from "../../api/admin";
 import { useNotification } from "../../hooks";
+import MostRated from "../../components/admin/MostRated";
 
 const Dashboard = () => {
   const [appInfo, setAppInfo] = useState({
@@ -37,6 +38,7 @@ const Dashboard = () => {
           subTitle={appInfo.userCount.toLocaleString()}
         />
         <LatestMovieUploads />
+        <MostRated />
       </div>
     </>
   );
