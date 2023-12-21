@@ -25,7 +25,12 @@ const TopRatedRatedShortFilms = () => {
     };
   }, []);
 
-  return <MediaList movies={movies} title="Viewers' choice (Short Films)" />;
+  return (
+    <MediaList
+      movies={movies.sort((a, b) => b.ratingAvg - a.ratingAvg)}
+      title="Viewers' choice (Short Films)"
+    />
+  );
 };
 
 export default TopRatedRatedShortFilms;

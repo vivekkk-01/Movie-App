@@ -23,7 +23,12 @@ const TopRatedRatedTVSeries = () => {
     };
   }, []);
 
-  return <MediaList movies={movies} title="Viewers' choice (TV Series)" />;
+  return (
+    <MediaList
+      movies={movies.sort((a, b) => b.ratingAvg - a.ratingAvg)}
+      title="Viewers' choice (TV Series)"
+    />
+  );
 };
 
 export default TopRatedRatedTVSeries;
