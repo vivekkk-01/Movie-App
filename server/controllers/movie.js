@@ -660,7 +660,15 @@ exports.searchPublicMovies = async (req, res) => {
         };
       })
     );
-    return res.json({ ...result["0"]._doc });
+    const response = result.map((res) => {
+      return {
+        ...res._doc,
+        poster: res._doc.poster.url,
+        ratingAvg: res.ratingAvg,
+        reviewCount: res.reviewCount,
+      };
+    });
+    return res.json(response);
   } catch (error) {
     return res
       .status(error.http_code ? error.http_code : 500)

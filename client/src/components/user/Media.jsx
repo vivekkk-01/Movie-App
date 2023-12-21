@@ -13,9 +13,11 @@ const MediaList = ({ movies = [], title }) => {
   if (movies.length < 0) return;
   return (
     <div className="px-4 xs:px-2">
-      <h1 className="my-2 text-2xl dark:text-white text-primary font-semibold">
-        {title}
-      </h1>
+      {title ? (
+        <h1 className="my-2 text-2xl dark:text-white text-primary font-semibold">
+          {title}
+        </h1>
+      ) : null}
       <GridContainer>
         {movies.map((movie) => {
           return <ListItem key={movie._id} movie={movie} />;

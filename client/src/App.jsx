@@ -20,6 +20,7 @@ import AdminRoot from "./pages/admin/AdminRoot";
 import SearchMovie from "./pages/admin/SearchMovie";
 import SingleMedia from "./pages/user/SingleMedia";
 import MediaReviews from "./pages/user/MediaReviews";
+import SearchedMovies from "./components/user/SearchedMovies";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: "media/:mediaId", element: <SingleMedia /> },
       { path: "media/reviews/:mediaId", element: <MediaReviews /> },
+      {
+        path: "movies/search",
+        element: <SearchedMovies />,
+      },
     ],
   },
   {

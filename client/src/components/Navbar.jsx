@@ -1,6 +1,6 @@
 import { BsFillSunFill } from "react-icons/bs";
 import Container from "./Container";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth, useTheme } from "../hooks";
 import AppSearchForm from "./Form/AppSearchForm";
 
@@ -8,6 +8,10 @@ const Navbar = () => {
   const { toggleTheme } = useTheme();
   const { authInfo, handleLogout } = useAuth();
   const { isLoggedIn } = authInfo;
+  const navigate = useNavigate();
+  const handleSearchSubmit = (query) => {
+    navigate(`/movies/search?title=${query}`);
+  };
 
   return (
     <div className="bg-secondary shadow-sm shadow-gray-500">
@@ -28,6 +32,7 @@ const Navbar = () => {
               <AppSearchForm
                 placeholder="Search"
                 inputClassName="border-dark-subtle text-white focus:border-white"
+                onSubmit={handleSearchSubmit}
               />
             </li>
             {isLoggedIn ? (
