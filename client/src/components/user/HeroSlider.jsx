@@ -117,7 +117,7 @@ const HeroSlider = () => {
 
   return (
     <div className="flex w-full">
-      <div className="w-4/5 aspect-video relative overflow-hidden">
+      <div className="w-4/5 xs:w-full aspect-video relative overflow-hidden">
         <Link to={`/media/${slide.id}`} className="w-full cursor-pointer block">
           <img
             onClick={() => navigate(`/media/${slide.id}`)}
@@ -145,8 +145,8 @@ const HeroSlider = () => {
           onPrevClick={prevClickHandler}
         />
       </div>
-      <div className="w-1/5 space-y-3 px-3">
-        <h1 className="font-semibold text-2xl text-primary dark:text-white">
+      <div className="w-1/5 xs:hidden space-y-3 px-3">
+        <h1 className="font-semibold text-2xl tab:text-lg text-primary dark:text-white">
           Up Next
         </h1>
         {upNext.map(({ poster, id }) => {
