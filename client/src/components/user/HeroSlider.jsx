@@ -6,6 +6,8 @@ import { Link, useNavigate } from "react-router-dom";
 
 let count = 0;
 let intervalId;
+let newTime = 0;
+let lastTime = 0;
 const HeroSlider = () => {
   const updateNotification = useNotification();
   const [slide, setSlide] = useState({});
@@ -26,7 +28,12 @@ const HeroSlider = () => {
   };
 
   const startSlideShow = () => {
-    intervalId = setInterval(nextClickHandler, 3500);
+    intervalId = setInterval(() => {
+      newTime = Date.now();
+      const delta = newTime - lastTime;
+      if (delta < 4000) return clearInterval(intervalId);
+      nextClickHandler();
+    }, 3500);
   };
 
   const pauseSlideShow = () => {
@@ -34,6 +41,7 @@ const HeroSlider = () => {
   };
 
   const nextClickHandler = () => {
+    lastTime = Date.now();
     pauseSlideShow();
     clonedSlideRef?.current?.classList.remove("opacity-0");
     setClonedSlide(slides[count]);

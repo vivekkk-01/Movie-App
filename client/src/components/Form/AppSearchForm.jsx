@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
-const AppSearchForm = ({ showResetIcon, placeholder, onSubmit, onReset }) => {
+const defaultStyle =
+  " dark:border-dark-subtle border-light-subtle dark:focus:border-white focus:border-primary dark:text-white";
+const AppSearchForm = ({
+  showResetIcon,
+  placeholder,
+  onSubmit,
+  onReset,
+  inputClassName = defaultStyle,
+}) => {
   const [value, setValue] = useState("");
 
   const handleSubmit = (e) => {
@@ -18,7 +26,10 @@ const AppSearchForm = ({ showResetIcon, placeholder, onSubmit, onReset }) => {
     <form onSubmit={handleSubmit} className="relative">
       <input
         type="text"
-        className="border-2 dark:border-dark-subtle border-light-subtle dark:focus:border-white focus:border-primary dark:text-white transition bg-transparent rounded text-lg p-1 outline-none"
+        className={
+          "border-2 transition bg-transparent rounded text-lg p-1 outline-none " +
+          defaultStyle
+        }
         placeholder={placeholder}
         onChange={({ target }) => setValue(target.value)}
         value={value}

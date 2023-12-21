@@ -2,6 +2,7 @@ import { BsFillSunFill } from "react-icons/bs";
 import Container from "./Container";
 import { Link } from "react-router-dom";
 import { useAuth, useTheme } from "../hooks";
+import AppSearchForm from "./Form/AppSearchForm";
 
 const Navbar = () => {
   const { toggleTheme } = useTheme();
@@ -24,21 +25,20 @@ const Navbar = () => {
               </button>
             </li>
             <li>
-              <input
-                type="text"
-                className="text-lg border-2 border-dark-subtle p-1 rounded bg-transparent focus:border-white transition text-white"
-                placeholder="Search..."
+              <AppSearchForm
+                placeholder="Search"
+                inputClassName="border-dark-subtle text-white focus:border-white"
               />
             </li>
             {isLoggedIn ? (
               <li
                 onClick={handleLogout}
-                className="text-white text-lg font-semibold"
+                className="text-white text-lg font-semibold xs:text-base"
               >
                 <button>Log out</button>
               </li>
             ) : (
-              <li className="text-white text-lg font-semibold">
+              <li className="text-white text-lg font-semibold xs:text-base">
                 <Link to="/auth/login">Log In</Link>
               </li>
             )}
