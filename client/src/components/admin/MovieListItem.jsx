@@ -24,12 +24,13 @@ const MovieListItem = ({ movie, onDelete, onEdit, onOpen }) => {
               </h1>
               <div className="space-x-1">
                 {genres.map((genre, index) => {
+                  console.log(genres.length, index);
                   return (
                     <span
                       key={genre + index}
                       className="text-xs text-primary dark:text-white"
                     >
-                      {genre}
+                      {genres.length === index + 1 ? genre : `${genre},`}
                     </span>
                   );
                 })}
