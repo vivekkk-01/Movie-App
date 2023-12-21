@@ -15,10 +15,8 @@ const SearchedMovies = () => {
   const searchMovies = async (val) => {
     const { type, response } = await getSearchPublicMovies(val);
     if (type === "error") return updateNotification(type, response);
-    console.log("response", response);
     if (response.length < 0 || !response.length) return setNotFound(true);
     setNotFound(false);
-    console.log("response", response);
     setMovies([...response]);
   };
 

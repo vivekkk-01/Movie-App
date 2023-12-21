@@ -13,8 +13,6 @@ const TopRatedRatedShortFilms = () => {
     setMovies([...response]);
   };
 
-  console.log(movies, " MOVIES");
-
   useEffect(() => {
     const ac = new AbortController();
 

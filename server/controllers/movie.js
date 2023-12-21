@@ -34,7 +34,6 @@ exports.createMovie = async (req, res) => {
   try {
     let error = validationResult(req);
     if (!error.isEmpty()) {
-      console.log(error);
       return res.status(401).json(error.array()[0].msg);
     }
     const { body } = req;
@@ -103,7 +102,6 @@ exports.createMovie = async (req, res) => {
     });
     res.status(201).json(movie);
   } catch (error) {
-    console.log(error);
     return res
       .status(error.http_code ? error.http_code : 500)
       .json(
@@ -118,7 +116,6 @@ exports.updateMovie = async (req, res) => {
   try {
     let error = validationResult(req);
     if (!error.isEmpty()) {
-      console.log(error);
       return res.status(401).json(error.array()[0].msg);
     }
     const { movieId } = req.params;

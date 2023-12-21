@@ -24,7 +24,6 @@ app.use("/api/reviews", reviewRoutes);
 app.use("/api/admin", adminRoutes);
 
 app.use((err, req, res, next) => {
-  console.log(err.message, "Error");
   const errMessage = err
     ? err
     : err.message
