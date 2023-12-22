@@ -120,7 +120,7 @@ const EmailVerification = () => {
               type="button"
               className="hover:underline dark:text-white text-blue-500 font-semibold mt-2"
             >
-              I don't have an OTP
+              Resend OTP
             </button>
           </div>
         </form>
