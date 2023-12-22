@@ -28,7 +28,7 @@ const AppSearchForm = ({
         type="text"
         className={
           "border-2 transition bg-transparent rounded text-lg p-1 outline-none " +
-          defaultStyle
+          inputClassName
         }
         placeholder={placeholder}
         onChange={({ target }) => setValue(target.value)}
