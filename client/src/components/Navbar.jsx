@@ -17,7 +17,9 @@ const Navbar = () => {
     <div className="bg-secondary shadow-sm shadow-gray-500">
       <Container className="p-2">
         <div className="flex md:flex-row lg:flex-row justify-between items-center xs:flex-col">
-          <img src="../../public/logo.png" alt="" className="h-10" />
+          <Link to="/">
+            <img src="../../public/logo.png" alt="" className="h-10" />
+          </Link>
 
           <ul className="flex items-center space-x-3">
             <li>
