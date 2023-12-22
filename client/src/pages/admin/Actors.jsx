@@ -79,8 +79,8 @@ const Actors = () => {
   };
 
   const handleActorUpdate = (profile) => {
-    const updatedActors = profiles.map((actor) => {
-      if (actor._id === profile._id) {
+    const updatedActors = profiles?.map((actor) => {
+      if (actor._id === profile?._id) {
         return profile;
       }
       return actor;
@@ -128,8 +128,8 @@ const Actors = () => {
           </h1>
         ) : (
           <div className="grid grid-cols-4 gap-3 my-5 mx-3 tab:gap-5 tab:grid-cols-3 xs:grid xs:grid-cols-1 xs:grid-rows-3">
-            {results.length > 0 &&
-              results.map((profile) => (
+            {results?.length > 0 &&
+              results?.map((profile) => (
                 <ActorProfile
                   key={profile._id}
                   profile={profile}
@@ -137,8 +137,8 @@ const Actors = () => {
                   onDelete={deleteHandler.bind(null, profile)}
                 />
               ))}
-            {results.length <= 0 &&
-              profiles.map((profile) => (
+            {results?.length <= 0 &&
+              profiles?.map((profile) => (
                 <ActorProfile
                   key={profile._id}
                   profile={profile}
@@ -148,7 +148,7 @@ const Actors = () => {
               ))}
           </div>
         )}
-        {results.length <= 0 && !notFound && (
+        {results?.length <= 0 && !notFound && (
           <NextAndPrevButton
             onNextClick={handleClickNext}
             onPrevClick={handleClickPrev}

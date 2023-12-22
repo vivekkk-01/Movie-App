@@ -88,14 +88,14 @@ const SingleMedia = () => {
                 state={{ title }}
                 className="text-highlight dark:text-highlight-dark hover:underline"
               >
-                {!reviews.reviewCount ? null : reviews.reviewCount}{" "}
-                {reviews.reviewCount == 1
+                {!reviews?.reviewCount ? null : reviews?.reviewCount}{" "}
+                {reviews?.reviewCount == 1
                   ? "Review"
-                  : !reviews.reviewCount
+                  : !reviews?.reviewCount
                   ? null
                   : "Reviews"}
               </Link>
-              <Rating ratingAvg={reviews.ratingAvg} />
+              <Rating ratingAvg={reviews?.ratingAvg} />
               <button
                 onClick={handleRate}
                 className="text-highlight dark:text-highlight-dark hover:underline"
@@ -126,11 +126,11 @@ const SingleMedia = () => {
               <p className="text-light-subtle dark:text-dark-subtle font-semibold mr-2">
                 Writers:
               </p>
-              {writers.map((writer) => {
+              {writers?.map((writer) => {
                 return (
                   <div
-                    onClick={handleProfileClick.bind(null, writer.id)}
-                    key={writer.id}
+                    onClick={handleProfileClick.bind(null, writer?.id)}
+                    key={writer?.id}
                     className="flex space-x-2"
                   >
                     <p className="text-highlight dark:text-highlight-dark hover:underline cursor-pointer">
@@ -146,7 +146,7 @@ const SingleMedia = () => {
                 Cast:
               </p>
               <div className="flex space-x-2">
-                {cast.map((c) => {
+                {cast?.map((c) => {
                   return (
                     c.leadActor && (
                       <p
@@ -176,7 +176,7 @@ const SingleMedia = () => {
                 Release Date:
               </p>
               <p className="text-highlight dark:text-highlight-dark">
-                {releaseDate.split("T")[0]}
+                {releaseDate?.split("T")[0]}
               </p>
             </div>
 
@@ -185,7 +185,7 @@ const SingleMedia = () => {
                 Genres:
               </p>
               <div className="flex space-x-2">
-                {genres.map((g) => {
+                {genres?.map((g) => {
                   return (
                     <p
                       key={g}
@@ -211,7 +211,7 @@ const SingleMedia = () => {
               Cast:
             </h1>
             <div className="grid grid-cols-10">
-              {cast.map((c) => {
+              {cast?.map((c) => {
                 return (
                   <div
                     onClick={handleProfileClick.bind(null, c.profile.id)}

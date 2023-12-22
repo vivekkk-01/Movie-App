@@ -25,7 +25,7 @@ const TopRatedWebSeries = () => {
 
   return (
     <MediaList
-      movies={movies.sort((a, b) => b.ratingAvg - a.ratingAvg)}
+      movies={movies?.sort((a, b) => b.ratingAvg - a.ratingAvg)}
       title="Viewers' choice (Web Series)"
     />
   );

@@ -30,8 +30,8 @@ const SearchMovie = () => {
           Movies Not Found!
         </h1>
       )}
-      {movies.length > 0 &&
-        movies.map((movie) => {
+      {movies?.length > 0 &&
+        movies?.map((movie) => {
           return <MovieListItem movie={movie} key={movie._id} />;
         })}
     </div>

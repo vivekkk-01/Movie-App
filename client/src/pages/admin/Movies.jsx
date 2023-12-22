@@ -103,7 +103,7 @@ const Movies = () => {
   return (
     <>
       <div className="space-y-3 p-5">
-        {movies.map((movie) => {
+        {movies?.map((movie) => {
           return (
             <MovieListItem
               key={movie._id}

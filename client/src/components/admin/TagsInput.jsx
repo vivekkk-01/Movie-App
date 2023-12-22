@@ -55,7 +55,7 @@ const TagsInput = ({ onChange, name, values }) => {
   }, [tag]);
 
   useEffect(() => {
-    if (tags.length !== values.length) {
+    if (tags?.length !== values?.length) {
       onChange(tags);
     }
   }, [tags]);
@@ -70,7 +70,7 @@ const TagsInput = ({ onChange, name, values }) => {
       ref={tagsRef}
       className="custom-scrollbar overflow-x-auto border-2 transition-all bg-transparent dark:bg-transparent px-2 h-10 rounded w-full text-white flex items-center space-x-2"
     >
-      {tags.map((tag) => (
+      {tags?.map((tag) => (
         <Tag onClick={(event) => handleRemove(event, tag)} key={tag}>
           {tag}
         </Tag>

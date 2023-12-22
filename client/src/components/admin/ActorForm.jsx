@@ -126,7 +126,7 @@ const ActorForm = ({ title, btnTitle, onSubmit, busy, initialState }) => {
         <Selector
           label="Gender"
           name="gender"
-          value={actorInfo.gender}
+          value={actorInfo?.gender}
           onChange={handleChange}
           options={options}
         />

@@ -31,7 +31,7 @@ const MediaReviews = () => {
 
   const findReview = () => {
     if (profileOwnersReview) return setProfileOwnersReview(null);
-    const review = reviews.find((r) => r.owner._id === authInfo.profile.id);
+    const review = reviews?.find((r) => r.owner._id === authInfo.profile.id);
     if (!review) return updateNotification("error", "You don't have a review.");
     setProfileOwnersReview(review);
   };
@@ -42,7 +42,7 @@ const MediaReviews = () => {
     setBusy(false);
     if (type === "error") return updateNotification(type, response);
     updateNotification(type, response);
-    const updatedReviews = reviews.filter(
+    const updatedReviews = reviews?.filter(
       (r) => r._id !== profileOwnersReview._id
     );
     setReviews([...updatedReviews]);
@@ -57,8 +57,8 @@ const MediaReviews = () => {
         content: data.content,
         rating: data.rating,
       });
-    const updatedReviews = reviews.map((r) => {
-      if (data._id === r._id)
+    const updatedReviews = reviews?.map((r) => {
+      if (data?._id === r._id)
         return { ...r, content: data.content, rating: data.rating };
       return r;
     });
@@ -68,12 +68,12 @@ const MediaReviews = () => {
   return (
     <div className="dark:bg-primary bg-white min-h-screen pb-10">
       <Container className="w-4/5 mx-auto xs:w-screen px-4 py-8">
-        {reviews.length <= 0 && (
+        {reviews?.length <= 0 && (
           <h1 className="font-semibold text-3xl text-secondary dark:text-white text-center opacity-80">
             Reviews Not Found!
           </h1>
         )}
-        {reviews.length > 0 && (
+        {reviews?.length > 0 && (
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-semibold text-secondary dark:text-white">
               <span className="text-light-subtle dark:text-dark-subtle font-normal">
@@ -103,7 +103,7 @@ const MediaReviews = () => {
           </div>
         ) : (
           <div className="mt-4 space-y-4">
-            {reviews.map((review) => (
+            {reviews?.map((review) => (
               <ReviewCard review={review} key={review._id} />
             ))}
           </div>

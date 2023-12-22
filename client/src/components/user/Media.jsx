@@ -19,7 +19,7 @@ const MediaList = ({ movies = [], title }) => {
         </h1>
       ) : null}
       <GridContainer>
-        {movies.map((movie) => {
+        {movies?.map((movie) => {
           return <ListItem key={movie._id} movie={movie} />;
         })}
       </GridContainer>

@@ -101,7 +101,7 @@ const EmailVerification = () => {
             </p>
           </div>
           <div className="flex justify-between items-center space-x-4">
-            {otp.map((_, index) => (
+            {otp?.map((_, index) => (
               <input
                 ref={activeOtpIndex === index ? inputRef : null}
                 key={index}

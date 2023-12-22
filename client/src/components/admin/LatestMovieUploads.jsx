@@ -36,7 +36,7 @@ const LatestMovieUploads = () => {
   };
 
   const updateMovieHandler = async (movie) => {
-    const updatedMovies = movies.map((m) => {
+    const updatedMovies = movies?.map((m) => {
       if (m._id === movie._id) return movie;
       return m;
     });
@@ -65,7 +65,7 @@ const LatestMovieUploads = () => {
           Recent Uploads
         </h1>
         <div className="space-y-3">
-          {movies.map((movie) => {
+          {movies?.map((movie) => {
             return (
               <MovieListItem
                 key={movie._id}

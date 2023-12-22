@@ -121,30 +121,30 @@ const HeroSlider = () => {
     } else {
       pauseSlideShow();
     }
-  }, [slides.length, visible]);
+  }, [slides?.length, visible]);
 
   return (
     <div className="flex w-full">
       <div className="w-4/5 xs:w-full aspect-video relative overflow-hidden">
-        <Link to={`/media/${slide.id}`} className="w-full cursor-pointer block">
+        <Link to={`/media/${slide?.id}`} className="w-full cursor-pointer block">
           <img
-            onClick={() => navigate(`/media/${slide.id}`)}
+            onClick={() => navigate(`/media/${slide?.id}`)}
             ref={slideRef}
-            src={slide.poster}
+            src={slide?.poster}
             alt=""
             className="aspect-video object-cover cursor-pointer"
           />
           <div className="absolute inset-0 flex flex-col justify-end p-3 bg-gradient-to-t from-gray-200 via-transparent dark:from-primary dark:via-transparent">
             <h1 className="font-semibold text-4xl dark:text-highlight-dark text-highlight">
-              {slide.title}
+              {slide?.title}
             </h1>
           </div>
         </Link>
         <img
-          onClick={() => navigate(`/media/${slide.id}`)}
+          onClick={() => navigate(`/media/${slide?.id}`)}
           onAnimationEnd={handleAnimationEnd}
           ref={clonedSlideRef}
-          src={clonedSlide.poster}
+          src={clonedSlide?.poster}
           alt=""
           className="aspect-video object-cover absolute inset-0 cursor-pointer"
         />
@@ -158,7 +158,7 @@ const HeroSlider = () => {
           Up Next
         </h1>
         {upNext.map(({ poster, id }) => {
-          if (id === slide.id) return;
+          if (id === slide?.id) return;
           return (
             <img
               src={poster}
