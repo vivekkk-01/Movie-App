@@ -446,7 +446,7 @@ exports.getRelatedMovies = async (req, res) => {
       },
       {
         $match: {
-          tags: { $in: [...movie.tags] },
+          genres: { $in: [...movie.genres] },
           _id: { $ne: movie._id },
         },
       },
