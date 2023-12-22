@@ -15,6 +15,7 @@ const ForgetPassword = () => {
   const { authInfo } = useAuth();
   const [email, setEmail] = useState("");
   const updateNotification = useNotification();
+  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     if (authInfo?.isLoggedIn) {
@@ -24,12 +25,21 @@ const ForgetPassword = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (busy) return;
+    setBusy(true);
     const validateEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-
-    if (!email.trim()) return updateNotification("error", "Email is required.");
-    if (!validateEmail.test(email))
-      return updateNotification("error", "Invalid Email");
+    if (!email.trim()) {
+      updateNotification("error", "Email is required.");
+      setBusy(false);
+      return;
+    }
+    if (!validateEmail.test(email)) {
+      updateNotification("error", "Invalid Email");
+      setBusy(false);
+      return;
+    }
     const { type, response } = await forgetPassword(email);
+    setBusy(false);
     return updateNotification(type, response);
   };
 
@@ -45,7 +55,7 @@ const ForgetPassword = () => {
             type={"email"}
             onChange={(event) => setEmail(event.target.value)}
           />
-          <Submit value={"Send Link"} />
+          <Submit busy={busy} value={"Send Link"} />
           <div className="flex justify-between items-center">
             <CustomLink to="/auth/login">Log In</CustomLink>
             <CustomLink to="/auth/sign-up">Sign Up</CustomLink>

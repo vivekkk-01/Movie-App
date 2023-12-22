@@ -10,6 +10,7 @@ import { useAuth, useNotification } from "../../hooks";
 import { resetPassword } from "../../api/auth";
 
 const ResetPassword = () => {
+  const [busy, setBusy] = useState(false);
   const [password, setPassword] = useState({
     one: "",
     two: "",
@@ -36,20 +37,29 @@ const ResetPassword = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (password.one.length === 0)
-      return updateNotification("error", "Password is missing!");
-    if (password.one.trim().length < 8)
-      return updateNotification(
-        "error",
-        "Password shoud contain 8 characters!"
-      );
-    if (password.one !== password.two)
-      return updateNotification("error", "Passwords do not match!");
+    if (busy) return;
+    setBusy(true);
+    if (password.one.length === 0) {
+      updateNotification("error", "Password is missing!");
+      setBusy(false);
+      return;
+    }
+    if (password.one.trim().length < 8) {
+      updateNotification("error", "Password should contain 8 characters!");
+      setBusy(false);
+      return;
+    }
+    if (password.one !== password.two) {
+      updateNotification("error", "Passwords do not match!");
+      setBusy(false);
+      return;
+    }
     const { type, response } = await resetPassword({
       userId,
       token,
       password: password.one,
     });
+    setBusy(false);
     updateNotification(type, response);
     type !== "error" && navigate("/auth/login", { replace: true });
   };
@@ -75,7 +85,7 @@ const ResetPassword = () => {
             onChange={handleChange}
             value={password.two}
           />
-          <Submit value={"Reset Password"} busy={authInfo.isPending} />
+          <Submit value={"Reset Password"} busy={busy} />
         </form>
       </Container>
     </FormContainer>

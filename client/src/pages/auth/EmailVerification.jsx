@@ -21,6 +21,7 @@ const isValidOtp = (otp) => {
 const EmailVerification = () => {
   const OTP_LENGTH = 6;
   const [otp, setOtp] = useState(new Array(OTP_LENGTH).fill(""));
+  const [busy, setBusy] = useState(false);
   const [activeOtpIndex, setActiveOtpIndex] = useState(0);
   const navigate = useNavigate();
   const updateNotification = useNotification();
@@ -70,12 +71,18 @@ const EmailVerification = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!isValidOtp(otp)) return updateNotification("error", "Invalid OTP");
-    else {
+    if (busy) return;
+    setBusy(true);
+    if (!isValidOtp(otp)) {
+      updateNotification("error", "Invalid OTP");
+      setBusy(false);
+      return;
+    } else {
       const { type, response } = await verifyEmail({
         OTP: otp.join(""),
         userId: user.id || user.profile?.id,
       });
+      setBusy(false);
       if (type === "error") {
         updateNotification("error", response);
       } else {
@@ -114,7 +121,7 @@ const EmailVerification = () => {
             ))}
           </div>
           <div>
-            <Submit value="Verify Account" />
+            <Submit value="Verify Account" busy={busy} />
             <button
               onClick={handleResendOTP}
               type="button"

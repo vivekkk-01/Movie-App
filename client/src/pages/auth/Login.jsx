@@ -17,7 +17,7 @@ const validateUser = ({ email, password }) => {
   if (password.length < 8)
     return {
       ok: false,
-      error: "Password should be atleast 8 characters long.",
+      error: "Password should be at least 8 characters long.",
     };
 
   return { ok: true };
@@ -28,7 +28,7 @@ const Login = () => {
     email: "",
     password: "",
   });
-
+  const [busy, setBusy] = useState(false);
   const navigate = useNavigate();
 
   const { authInfo, handleLogin } = useAuth();
@@ -42,11 +42,15 @@ const Login = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (busy) return;
+    setBusy(true);
     const { ok, error } = validateUser(userInfo);
-    if (!ok) updateNotification("error", error);
-    else {
+    if (!ok) {
+      updateNotification("error", error);
+    } else {
       handleLogin(userInfo);
     }
+    setBusy(false);
   };
 
   useEffect(() => {
@@ -80,7 +84,7 @@ const Login = () => {
             onChange={handleChange}
             value={userInfo.password}
           />
-          <Submit value={"Log In"} busy={authInfo.isPending} />
+          <Submit value={"Log In"} busy={busy} />
           <div className="flex justify-between items-center">
             <CustomLink to="/auth/forget-password">Forget Password</CustomLink>
             <CustomLink to="/auth/sign-up">Sign Up</CustomLink>

@@ -35,6 +35,7 @@ const SignUp = () => {
     email: "",
     password: "",
   });
+  const [busy, setBusy] = useState(false);
 
   const navigate = useNavigate();
   const { authInfo } = useAuth();
@@ -48,10 +49,16 @@ const SignUp = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (busy) return;
+    setBusy(true);
     const { ok, error } = validateUser(userInfo);
-    if (!ok) updateNotification("error", error);
-    else {
+    if (!ok) {
+      updateNotification("error", error);
+      setBusy(false);
+      return;
+    } else {
       const { type, response } = await createUser(userInfo);
+      setBusy(false);
       return type === "error"
         ? updateNotification("error", response)
         : navigate("/auth/verification", {
@@ -96,7 +103,7 @@ const SignUp = () => {
             label={"Password"}
             value={userInfo.password}
           />
-          <Submit value={"Sign Up"} />
+          <Submit value={"Sign Up"} busy={busy} />
           <div className="flex justify-between items-center">
             <CustomLink to="/auth/login">Log In</CustomLink>
           </div>
