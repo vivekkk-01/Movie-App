@@ -17,7 +17,8 @@ const RelatedMovies = ({ mediaId, type }) => {
     fetchMovies();
   }, [mediaId]);
 
-  return <MediaList movies={movies} title={`Related ${type}s`} />;
+  if (movies?.length > 0)
+    return <MediaList movies={movies} title={`Related ${type}s`} />;
 };
 
 export default RelatedMovies;
