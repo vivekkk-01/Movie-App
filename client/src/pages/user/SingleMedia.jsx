@@ -128,41 +128,47 @@ const SingleMedia = () => {
               <p className="text-light-subtle dark:text-dark-subtle font-semibold mr-2">
                 Writers:
               </p>
-              {writers?.map((writer) => {
+              {writers?.map((writer, index) => {
                 return (
                   <div
                     onClick={handleProfileClick.bind(null, writer?.id)}
                     key={writer?.id}
-                    className="flex space-x-2"
+                    className="flex"
                   >
-                    <p className="text-highlight dark:text-highlight-dark hover:underline cursor-pointer">
-                      {writer?.name}
+                    <p className="mr-1 text-highlight dark:text-highlight-dark hover:underline cursor-pointer">
+                      {writers.length === index + 1
+                        ? writer.name
+                        : `${writer.name},`}
                     </p>
                   </div>
                 );
               })}
             </div>
 
-            <div className="flex">
-              <p className="text-light-subtle dark:text-dark-subtle font-semibold mr-2">
-                Cast:
-              </p>
-              <div className="flex space-x-2">
-                {cast?.map((c) => {
-                  return (
-                    c.leadActor && (
-                      <p
-                        onClick={handleProfileClick.bind(null, c.profile.id)}
-                        key={c.profile.id}
-                        className="text-highlight dark:text-highlight-dark hover:underline cursor-pointer"
-                      >
-                        {c?.profile.name}
-                      </p>
-                    )
-                  );
-                })}
+            {cast?.filter((c) => c.leadActor).length > 0 && (
+              <div className="flex">
+                <p className="text-light-subtle dark:text-dark-subtle font-semibold mr-2">
+                  Cast:
+                </p>
+                <div className="flex space-x-2">
+                  {cast?.map((c, index) => {
+                    return (
+                      c.leadActor && (
+                        <p
+                          onClick={handleProfileClick.bind(null, c.profile.id)}
+                          key={c.profile.id}
+                          className="text-highlight dark:text-highlight-dark hover:underline cursor-pointer"
+                        >
+                          {cast.filter((c) => !c.leadActor).length === index + 1
+                            ? c.profile.name
+                            : `${c.profile.name},`}
+                        </p>
+                      )
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            )}
 
             <div className="flex space-x-2">
               <p className="text-light-subtle dark:text-dark-subtle font-semibold">
@@ -186,14 +192,14 @@ const SingleMedia = () => {
               <p className="text-light-subtle dark:text-dark-subtle font-semibold mr-2">
                 Genres:
               </p>
-              <div className="flex space-x-2">
-                {genres?.map((g) => {
+              <div className="flex space-x-1">
+                {genres?.map((g, index) => {
                   return (
                     <p
                       key={g}
                       className="text-highlight dark:text-highlight-dark"
                     >
-                      {g}
+                      {genres.length === index + 1 ? g : `${g},`}
                     </p>
                   );
                 })}
@@ -207,7 +213,6 @@ const SingleMedia = () => {
               <p className="text-highlight dark:text-highlight-dark">{type}</p>
             </div>
           </div>
-
           <div className="mt-5">
             <h1 className="text-light-subtle dark:text-dark-subtle font-semibold text-2xl mb-2">
               Cast:
