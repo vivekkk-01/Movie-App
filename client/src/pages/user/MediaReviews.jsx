@@ -34,7 +34,7 @@ const MediaReviews = () => {
     setLoading(false);
     setReviews([...response]);
   };
-
+ 
   useEffect(() => {
     if (mediaId) fetchReviews();
   }, [mediaId]);
