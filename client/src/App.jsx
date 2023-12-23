@@ -19,8 +19,10 @@ import Movies from "./pages/admin/Movies";
 import AdminRoot from "./pages/admin/AdminRoot";
 import SearchMovie from "./pages/admin/SearchMovie";
 import SingleMedia from "./pages/user/SingleMedia";
-import MediaReviews from "./pages/user/MediaReviews";
-import SearchedMovies from "./components/user/SearchedMovies";
+import MediaReviews, {
+  loader as reviewsLoader,
+} from "./pages/user/MediaReviews";
+import SearchedMovies from "./pages/user/SearchedMovies";
 
 const router = createBrowserRouter([
   {
@@ -29,7 +31,11 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       { path: "media/:mediaId", element: <SingleMedia /> },
-      { path: "media/reviews/:mediaId", element: <MediaReviews /> },
+      {
+        path: "media/reviews/:mediaId",
+        element: <MediaReviews />,
+        loader: reviewsLoader,
+      },
       {
         path: "movies/search",
         element: <SearchedMovies />,

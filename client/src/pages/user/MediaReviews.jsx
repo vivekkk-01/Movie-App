@@ -2,7 +2,12 @@ import React, { useEffect, useState } from "react";
 import Container from "../../components/Container";
 import Rating from "../../components/user/Rating";
 import { deleteReview, getReviews } from "../../api/review";
-import { useLocation, useParams } from "react-router-dom";
+import {
+  redirect,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import { useAuth, useNotification } from "../../hooks";
 import { BsTrash, BsPencilSquare } from "react-icons/bs";
 import ConfirmModal from "../../components/modals/ConfirmModal";
@@ -19,6 +24,8 @@ const MediaReviews = () => {
   const { state } = useLocation();
   const { mediaId } = useParams();
   const { authInfo } = useAuth();
+  const isLoggedIn = localStorage.getItem("auth-token");
+  const navigate = useNavigate();
 
   const fetchReviews = async () => {
     setLoading(true);
@@ -31,6 +38,10 @@ const MediaReviews = () => {
   useEffect(() => {
     if (mediaId) fetchReviews();
   }, [mediaId]);
+
+  useEffect(() => {
+    if (!isLoggedIn) return navigate("/auth/login");
+  }, []);
 
   const findReview = () => {
     if (profileOwnersReview) return setProfileOwnersReview(null);
@@ -161,4 +172,12 @@ const ReviewCard = ({ review }) => {
       </div>
     </div>
   );
+};
+
+export const loader = () => {
+  const token = localStorage.getItem("auth-token");
+  if (!token) {
+    return redirect("/auth/login");
+  }
+  return null;
 };

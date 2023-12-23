@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Container from "../components/Container";
 import { useAuth } from "../hooks";
-import { useNavigate } from "react-router-dom";
+import { Link, redirect, useNavigate } from "react-router-dom";
 import TopRatedRatedShortFilms from "../components/user/TopRatedShortFilms";
 import TopRatedRatedFilms from "../components/user/TopRatedFilms";
 import TopRatedRatedTVSeries from "../components/user/TopRatedTVSeries";
@@ -11,13 +11,11 @@ import HeroSlider from "../components/user/HeroSlider";
 const Home = () => {
   const { authInfo } = useAuth();
   const isVerified = authInfo?.profile?.isVerified;
-  const { isLoggedIn } = authInfo;
+  const isLoggedIn = localStorage.getItem("auth-token");
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!authInfo?.isLoggedIn) {
-      navigate("/auth/login");
-    } else if (authInfo?.profile.role === "admin") {
+    if (authInfo?.profile.role === "admin") {
       navigate("/admin");
     }
   }, [authInfo]);
@@ -30,7 +28,17 @@ const Home = () => {
 
   return (
     <div className="dark:bg-primary bg-white min-h-screen">
-      {isLoggedIn && !isVerified ? (
+      {!isLoggedIn ? (
+        <p className="w-screen text-lg text-center bg-blue-50 p-2">
+          It looks like you aren't logged in,{" "}
+          <Link
+            to="/auth/login"
+            className="text-blue-500 font-semibold hover:underline"
+          >
+            click here to log in now.
+          </Link>
+        </p>
+      ) : isLoggedIn && !isVerified ? (
         <p className="w-screen text-lg text-center bg-blue-50 p-2">
           It looks like you haven't verified account,{" "}
           <button

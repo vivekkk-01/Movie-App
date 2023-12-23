@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { getSearchPublicMovies } from "../../api/movie";
 import { useNotification } from "../../hooks";
-import MediaList from "./Media";
-import Container from "../Container";
+import MediaList from "../../components/user/Media";
+import Container from "../../components/Container";
 import { useSearchParams } from "react-router-dom";
 
 const SearchedMovies = () => {

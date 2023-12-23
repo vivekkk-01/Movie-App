@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, redirect, useNavigate, useParams } from "react-router-dom";
 import { getSingleMedia } from "../../api/movie";
 import { useAuth, useNotification } from "../../hooks/index";
 import Container from "../../components/Container";
@@ -18,6 +18,7 @@ const SingleMedia = () => {
   const updateNotification = useNotification();
   const { authInfo } = useAuth();
   const navigate = useNavigate();
+  const isLoggedIn = localStorage.getItem("auth-token");
 
   const fetchSingleMedia = async () => {
     const { type, response } = await getSingleMedia(mediaId);
@@ -31,7 +32,7 @@ const SingleMedia = () => {
   }, [mediaId]);
 
   const handleRate = () => {
-    if (!authInfo.isLoggedIn) {
+    if (!isLoggedIn) {
       return navigate("/auth/login");
     }
     setShowRatingModal(true);
@@ -42,6 +43,7 @@ const SingleMedia = () => {
   };
 
   const handleProfileClick = (profileId) => {
+    if (!isLoggedIn) return navigate("/auth/login");
     setSelectedProfileId(profileId);
     setShowProfile(true);
   };
