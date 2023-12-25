@@ -150,7 +150,7 @@ const SingleMedia = () => {
                 <p className="text-light-subtle dark:text-dark-subtle font-semibold mr-2">
                   Cast:
                 </p>
-                <div className="flex space-x-2">
+                <div className="flex space-x-1">
                   {cast?.map((c, index) => {
                     return (
                       c.leadActor && (
