@@ -217,7 +217,7 @@ const SingleMedia = () => {
             <h1 className="text-light-subtle dark:text-dark-subtle font-semibold text-2xl mb-2">
               Cast:
             </h1>
-            <div className="grid grid-cols-10">
+            <div className="grid grid-cols-10 gap-2">
               {cast?.map((c) => {
                 return (
                   <div
