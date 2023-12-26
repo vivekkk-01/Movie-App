@@ -69,7 +69,7 @@ const ActorForm = ({ title, btnTitle, onSubmit, busy, initialState }) => {
   useEffect(() => {
     if (initialState) {
       setActorInfo({ ...initialState, avatar: null });
-      setSelectedAvatar(initialState.avatar.url);
+      setSelectedAvatar(initialState?.avatar?.url);
     }
   }, [initialState]);
 
