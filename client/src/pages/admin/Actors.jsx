@@ -189,16 +189,16 @@ const ActorProfile = ({ profile, onDelete, onEdit }) => {
         className="flex cursor-pointer relative tab:flex-col tab:w-full"
       >
         <img
-          src={avatar.url}
+          src={avatar?.url}
           alt=""
           className="w-24 aspect-square object-cover tab:aspect-auto tab:w-full tab:h-1/2 xs:h-2/3 xs:w-full xs:aspect-auto"
         />
         <div className="px-2 tab:px-0 tab:py-1 tab:h-1/2 xs:h-auto">
           <h1 className="text-xl text-primary dark:text-white font-semibold whitespace-nowrap">
-            {name.length >= 16 ? name.substring(0, 16) + "..." : name}
+            {name?.length >= 16 ? name.substring(0, 16) + "..." : name}
           </h1>
           <p className="opacity-70 text-primary dark:text-white tab:hidden">
-            {about.length >= 100 ? about.substring(0, 100) + "..." : about}
+            {about?.length >= 100 ? about.substring(0, 100) + "..." : about}
           </p>
           <p className="opacity-70 text-primary dark:text-white hidden tab:block xs:hidden">
             {about.length >= 150 ? about.substring(0, 150) + "..." : about}
