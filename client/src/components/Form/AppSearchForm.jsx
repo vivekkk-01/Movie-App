@@ -31,7 +31,12 @@ const AppSearchForm = ({
           inputClassName
         }
         placeholder={placeholder}
-        onChange={({ target }) => setValue(target.value)}
+        onChange={({ target }) => {
+          if (target.value === "") {
+            handleReset();
+          }
+          setValue(target.value);
+        }}
         value={value}
       />
       {showResetIcon && (
