@@ -80,15 +80,15 @@ const SingleMedia = () => {
             src={trailer}
             className="object-cover"
           ></video>
-          <div className="flex justify-between items-center">
-            <h1 className="text-4xl text-highlight dark:text-highlight-dark font-semibold py-3">
+          <div className="flex xs:gap-1 justify-between items-center xs:flex-col xs:items-start xs:my-2 xs:text-start">
+            <h1 className="text-4xl text-highlight dark:text-highlight-dark font-semibold py-3 xs:text-2xl">
               {title}
             </h1>
-            <div className="flex flex-col items-end">
+            <div className="flex flex-col items-end xs:w-24 xs:items-start">
               <Link
                 to={`/media/reviews/${mediaId}`}
                 state={{ title }}
-                className="text-highlight dark:text-highlight-dark hover:underline"
+                className="text-highlight dark:text-highlight-dark hover:underline xs:text-xs"
               >
                 {!reviews?.reviewCount ? null : reviews?.reviewCount}{" "}
                 {reviews?.reviewCount == 1
@@ -100,7 +100,7 @@ const SingleMedia = () => {
               <Rating ratingAvg={reviews?.ratingAvg} />
               <button
                 onClick={handleRate}
-                className="text-highlight dark:text-highlight-dark hover:underline"
+                className="text-highlight dark:text-highlight-dark hover:underline xs:text-xs"
                 type="button"
               >
                 Rate this {type}
@@ -108,23 +108,23 @@ const SingleMedia = () => {
             </div>
           </div>
           <div className="space-y-3">
-            <p className="text-light-subtle dark:text-dark-subtle">
+            <p className="text-light-subtle dark:text-dark-subtle xs:text-sm">
               {storyLine}
             </p>
 
-            <div className="flex space-x-2">
+            <div className="flex items-center space-x-2">
               <p className="text-light-subtle dark:text-dark-subtle font-semibold">
                 Director:
               </p>
               <p
                 onClick={handleProfileClick.bind(null, director.id)}
-                className="text-highlight dark:text-highlight-dark hover:underline cursor-pointer"
+                className="text-highlight dark:text-highlight-dark hover:underline cursor-pointer xs:text-sm"
               >
                 {director?.name}
               </p>
             </div>
 
-            <div className="flex">
+            <div className="flex items-center">
               <p className="text-light-subtle dark:text-dark-subtle font-semibold mr-2">
                 Writers:
               </p>
@@ -135,7 +135,7 @@ const SingleMedia = () => {
                     key={writer?.id}
                     className="flex"
                   >
-                    <p className="mr-1 text-highlight dark:text-highlight-dark hover:underline cursor-pointer">
+                    <p className="mr-1 text-highlight dark:text-highlight-dark hover:underline cursor-pointer xs:text-sm">
                       {writers.length === index + 1
                         ? writer.name
                         : `${writer.name},`}
@@ -146,18 +146,18 @@ const SingleMedia = () => {
             </div>
 
             {cast?.filter((c) => c.leadActor).length > 0 && (
-              <div className="flex">
+              <div className="flex items-center">
                 <p className="text-light-subtle dark:text-dark-subtle font-semibold mr-2">
                   Cast:
                 </p>
-                <div className="flex space-x-1">
+                <div className="flex items-center space-x-1">
                   {cast?.map((c, index) => {
                     return (
                       c.leadActor && (
                         <p
                           onClick={handleProfileClick.bind(null, c.profile.id)}
                           key={c.profile.id}
-                          className="text-highlight dark:text-highlight-dark hover:underline cursor-pointer"
+                          className="text-highlight dark:text-highlight-dark hover:underline cursor-pointer xs:text-sm"
                         >
                           {cast.filter((c) => !c.leadActor).length === index + 1
                             ? c.profile.name
@@ -170,25 +170,25 @@ const SingleMedia = () => {
               </div>
             )}
 
-            <div className="flex space-x-2">
+            <div className="flex space-x-2 items-center">
               <p className="text-light-subtle dark:text-dark-subtle font-semibold">
                 Language:
               </p>
-              <p className="text-highlight dark:text-highlight-dark">
+              <p className="text-highlight dark:text-highlight-dark xs:text-sm">
                 {language}
               </p>
             </div>
 
-            <div className="flex space-x-2">
+            <div className="flex space-x-2 items-center">
               <p className="text-light-subtle dark:text-dark-subtle font-semibold">
                 Release Date:
               </p>
-              <p className="text-highlight dark:text-highlight-dark">
+              <p className="text-highlight dark:text-highlight-dark xs:text-sm">
                 {releaseDate?.split("T")[0]}
               </p>
             </div>
 
-            <div className="flex">
+            <div className="flex items-center">
               <p className="text-light-subtle dark:text-dark-subtle font-semibold mr-2">
                 Genres:
               </p>
@@ -197,7 +197,7 @@ const SingleMedia = () => {
                   return (
                     <p
                       key={g}
-                      className="text-highlight dark:text-highlight-dark"
+                      className="text-highlight dark:text-highlight-dark xs:text-sm"
                     >
                       {genres.length === index + 1 ? g : `${g},`}
                     </p>
@@ -206,18 +206,20 @@ const SingleMedia = () => {
               </div>
             </div>
 
-            <div className="flex space-x-2">
+            <div className="flex space-x-2 items-center">
               <p className="text-light-subtle dark:text-dark-subtle font-semibold">
                 Type:
               </p>
-              <p className="text-highlight dark:text-highlight-dark">{type}</p>
+              <p className="text-highlight dark:text-highlight-dark xs:text-sm">
+                {type}
+              </p>
             </div>
           </div>
           <div className="mt-5">
             <h1 className="text-light-subtle dark:text-dark-subtle font-semibold text-2xl mb-2">
               Cast:
             </h1>
-            <div className="grid grid-cols-8 gap-2">
+            <div className="grid grid-cols-8 gap-2 xs:grid-cols-2 xs:text-sm">
               {cast?.map((c) => {
                 return (
                   <div
