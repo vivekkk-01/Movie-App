@@ -32,7 +32,7 @@ const Navbar = () => {
             </li>
             <li>
               <AppSearchForm
-                placeholder="Search"
+                placeholder="Search Movies"
                 inputClassName="border-gray-500 text-white focus:border-white"
                 onSubmit={handleSearchSubmit}
               />

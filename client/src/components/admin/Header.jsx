@@ -14,11 +14,16 @@ const Header = ({ onAddMovieClick, onAddActorClick }) => {
     navigate(`/admin/search?title=${value}`);
   };
 
+  const onReset = () => {
+    navigate("/admin/movies");
+  };
+
   return (
     <div className="p-4 relative flex items-center justify-between">
       <AppSearchForm
         placeholder={"Search Movies..."}
         onSubmit={searchHandler}
+        onReset={onReset}
       />
       <div className="flex items-center space-x-3 xs:block">
         <button
