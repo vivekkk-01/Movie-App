@@ -159,7 +159,7 @@ const SingleMedia = () => {
                           key={c.profile.id}
                           className="text-highlight dark:text-highlight-dark hover:underline cursor-pointer xs:text-sm"
                         >
-                          {cast.filter((c) => !c.leadActor).length === index + 1
+                          {cast.filter((c) => c.leadActor).length === index + 1
                             ? c.profile.name
                             : `${c.profile.name},`}
                         </p>
