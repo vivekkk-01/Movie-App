@@ -6,9 +6,10 @@ const Movie = require("../models/Movie");
 const Review = require("../models/Review");
 const { validationResult } = require("express-validator");
 
-exports.uploadTrailer = async (req, res) => {
+exports.uploadTrailer = async (req, res, next) => {
   try {
     const filePath = path.join(`public/upload/videos/${req.file.filename}`);
+    console.log("File path", filePath);
     const { secure_url, public_id } = await cloudinary.v2.uploader.upload(
       filePath,
       { resource_type: "video" }
