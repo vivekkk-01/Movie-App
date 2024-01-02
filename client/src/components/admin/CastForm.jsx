@@ -58,7 +58,7 @@ const CastForm = ({ onSubmit }) => {
   const handleProfileChange = ({ target }) => {
     const { value } = target;
     const { profile } = castInfo;
-    profile?.name = value;
+    profile.name = value;
     setCastInfo({ ...castInfo, ...profile });
     handleSearch(searchActor, value, setCastProfiles);
   };
