@@ -25,11 +25,11 @@ const CastForm = ({ onSubmit }) => {
     return (
       <div className="flex rounded overflow-hidden">
         <img
-          src={result.avatar.url}
+          src={result?.avatar?.url}
           alt=""
           className="w-16 h-16 object-cover"
         />
-        <p className="dark:text-white font-semibold">{result.name}</p>
+        <p className="dark:text-white font-semibold">{result?.name}</p>
       </div>
     );
   };
@@ -58,7 +58,7 @@ const CastForm = ({ onSubmit }) => {
   const handleProfileChange = ({ target }) => {
     const { value } = target;
     const { profile } = castInfo;
-    profile.name = value;
+    profile?.name = value;
     setCastInfo({ ...castInfo, ...profile });
     handleSearch(searchActor, value, setCastProfiles);
   };
@@ -76,7 +76,7 @@ const CastForm = ({ onSubmit }) => {
       <LiveSearch
         placeholder="Search Profile"
         results={castProfiles}
-        value={profile.name}
+        value={profile?.name}
         renderItem={renderItem}
         onSelect={handleOnSelect}
         onChange={handleProfileChange}
