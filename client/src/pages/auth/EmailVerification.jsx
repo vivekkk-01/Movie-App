@@ -99,7 +99,7 @@ const EmailVerification = () => {
 
   return (
     <FormContainer>
-      <Container>
+      <Container className="xs:w-80">
         <form onSubmit={handleSubmit} className={formModalClasses}>
           <div>
             <Title>Please enter OTP to verify your account</Title>
@@ -116,7 +116,7 @@ const EmailVerification = () => {
                 onChange={(event) => handleOtp(event, index)}
                 onKeyDown={(event) => handleKeyDown(event, index)}
                 type="number"
-                className="xs:w-10 xs:h-10 w-12 h-12 rounded text-center font-semibold dark:text-white text-primary text-xl border-2 dark:border-dark-subtle border-light-subtle dark:focus:border-white focus:border-primary bg-transparent spin-button-none"
+                className="xs:w-8 xs:h-8 w-12 h-12 rounded text-center font-semibold dark:text-white text-primary text-xl border-2 dark:border-dark-subtle border-light-subtle dark:focus:border-white focus:border-primary bg-transparent spin-button-none"
               />
             ))}
           </div>
