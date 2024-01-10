@@ -84,7 +84,7 @@ const SingleMedia = () => {
             <h1 className="text-4xl text-highlight dark:text-highlight-dark font-semibold py-3 xs:text-2xl">
               {title}
             </h1>
-            <div className="flex flex-col items-end xs:w-24 xs:items-start">
+            <div className="flex flex-col items-end xs:items-start">
               <Link
                 to={`/media/reviews/${mediaId}`}
                 state={{ title }}

@@ -19,7 +19,7 @@ const ProfileModal = ({ visible, onClose, profileId }) => {
 
   return (
     <ModalContainer visible={visible} onClose={onClose} ignoreContainer={true}>
-      <div className="w-72 bg-white dark:bg-primary p-5 rounded flex flex-col items-center space-y-3">
+      <div className="w-72 h-80 bg-white dark:bg-primary p-5 rounded flex flex-col items-center space-y-3 overflow-y-scroll">
         <img
           src={profile?.avatar?.url}
           className="w-28 h-28 rounded-full object-cover"
