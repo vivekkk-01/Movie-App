@@ -34,7 +34,7 @@ const AdminNavbar = () => {
         </button>
         <div className="p-2 xs:pt-11 xs:pb-4">
           <Link to="/admin">
-            <img src="/public/logo.png" alt="" className="h-14 p-2" />
+            <img src="/logo.png" alt="" className="h-14 p-2" />
           </Link>
         </div>
         <ul className="pl-5 tab:flex tab:p-0 xs:block">
