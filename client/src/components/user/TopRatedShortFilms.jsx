@@ -8,7 +8,7 @@ const TopRatedRatedShortFilms = () => {
   const updateNotification = useNotification();
 
   const fetchMovies = async (signal) => {
-    const { type, response } = await getTopRatedMovies("Short Film", signal);
+    const { type, response } = await getTopRatedMovies("Documentary", signal);
     if (type === "error") return updateNotification(type, response);
     setMovies([...response]);
   };
@@ -26,7 +26,7 @@ const TopRatedRatedShortFilms = () => {
   return (
     <MediaList
       movies={movies?.sort((a, b) => b.ratingAvg - a.ratingAvg)}
-      title="Viewers' choice (Short Films)"
+      title="Viewers' choice (Documentaries)"
     />
   );
 };
