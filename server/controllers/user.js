@@ -178,7 +178,7 @@ exports.forgotPassword = async (req, res) => {
     });
     const newToken = await passToken;
     await PasswordResetToken.create({ user: user._id, token: newToken });
-    const passwordResetUrl = `http://localhost:5173/auth/reset-password?token=${newToken}&id=${user._id}`;
+    const passwordResetUrl = `https://movie-backend-pzju.onrender.com/auth/reset-password?token=${newToken}&id=${user._id}`;
 
     sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
 
