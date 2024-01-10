@@ -31,6 +31,13 @@ const SingleMedia = () => {
     fetchSingleMedia();
   }, [mediaId]);
 
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, []);
+
   const handleRate = () => {
     if (!isLoggedIn) {
       return navigate("/auth/login");
